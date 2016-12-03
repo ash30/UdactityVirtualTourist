@@ -12,17 +12,10 @@ import CoreData
 
 // MARK: DATA SOURCE
 
-protocol LocationCreator {
+protocol MapViewDataSource {
     
-    var objectContext: NSManagedObjectContext! { get set }
-    func createNew(_ location:CLLocation)
+    func totalAnnotations() -> Int
+    func getAnnotation(mapView:MKMapView, forIndex:Int)
     
-}
-
-protocol MapViewDataSource: LocationCreator {
-    
-    var annotations: [MKAnnotation] { get }
-    //var controller: MapViewController { get set }
-        
 }
 

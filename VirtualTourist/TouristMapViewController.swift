@@ -12,10 +12,16 @@ import MapKit
 import CoreLocation
 
 
-protocol MapDataViewController {
+// MARK: ?
+
+protocol MapDataViewController: class {
+    
     var mapView: MKMapView! { get set }
-    var data: MapViewDataSource? { get set }
+    var data: PinMapDataSource? { get set }
+    
 }
+
+// MARK: ??
 
 protocol CreateOnLongPress: MapDataViewController {
     func createOnLongPress( _ handler:UIGestureRecognizer)
@@ -32,30 +38,14 @@ extension CreateOnLongPress {
         
         let pnt = mapView.convert(handler.location(in: mapView), toCoordinateFrom: mapView)
         let location = CLLocation.init(latitude: pnt.latitude, longitude: pnt.longitude)
-        data?.createNew(location)
+        data?.createPin(for: location)
         
     }
 }
 
-protocol LoadMapViewData: MapDataViewController {
-    func loadMapViewData()
-}
+// MARK: ???
 
-extension LoadMapViewData {
-    
-    func loadData(){
-        guard let data = data else {
-            return
-        }
-        
-        // refresh data in current map view
-        mapView.removeAnnotations(mapView.annotations)
-        mapView.addAnnotations(data.annotations)
-    }
-    
-}
-
-class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, LoadMapViewData {
+class VirtualTouristMapViewController: UIViewController, CreateOnLongPress {
     
     // MARK: PROPERTIES
     
@@ -68,7 +58,7 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, Load
     
     // MARK: DEPENDENCIES
     
-    var data: MapViewDataSource?
+    var data: PinMapDataSource?
     
     // MARK: LIFECYCLE
     
@@ -79,7 +69,7 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, Load
         mapView.addGestureRecognizer(longPessGesture)
         mapView.isUserInteractionEnabled = true
         
-        // Load Initial data
+        // Load initial map view data
         loadData()
         
     }
@@ -88,6 +78,14 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, Load
     
     @objc func longPresshandler(_ handler:UIGestureRecognizer){
         createOnLongPress(handler)
+    }
+    
+    // MARK: HELPERS
+    
+    func loadData(){
+        for i in 0 ..< (data?.totalAnnotations() ?? 0 ) {
+            data?.getAnnotation(mapView: mapView, forIndex: i)
+        }
     }
     
     
