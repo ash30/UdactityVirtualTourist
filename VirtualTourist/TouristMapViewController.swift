@@ -71,22 +71,27 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress {
         
         // Load initial map view data
         loadData()
-        
     }
     
     // MARK: TARGET ACTIONS
     
     @objc func longPresshandler(_ handler:UIGestureRecognizer){
         createOnLongPress(handler)
+        loadData()
     }
     
     // MARK: HELPERS
     
     func loadData(){
-        for i in 0 ..< (data?.totalAnnotations() ?? 0 ) {
-            data?.getAnnotation(mapView: mapView, forIndex: i)
+        guard let data = data else {
+            return
+        }
+        
+        mapView.removeAnnotations(mapView.annotations)
+        
+        for i in 0 ..< (data.totalAnnotations() ) {
+            data.getAnnotation(mapView: mapView, forIndex: i)
         }
     }
-    
     
 }
