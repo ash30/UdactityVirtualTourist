@@ -77,6 +77,7 @@ class PinMapDataSource: NSObject, PinDataSource, PinCreator, NSFetchedResultsCon
         
         super.init()
         controller.delegate = self
+        try? controller.performFetch()
 
     }
     
