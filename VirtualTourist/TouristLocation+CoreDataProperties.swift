@@ -2,13 +2,12 @@
 //  TouristLocation+CoreDataProperties.swift
 //  VirtualTourist
 //
-//  Created by Ashley Arthur on 28/11/2016.
+//  Created by Ashley Arthur on 04/12/2016.
 //  Copyright © 2016 AshArthur. All rights reserved.
 //
 
 import Foundation
-import CoreData
- 
+import CoreData 
 
 extension TouristLocation {
 
@@ -20,6 +19,7 @@ extension TouristLocation {
     @NSManaged public var longitude: Double
     @NSManaged public var name: String?
     @NSManaged public var photos: NSOrderedSet?
+    @NSManaged public var pins: NSSet?
 
 }
 
@@ -55,5 +55,22 @@ extension TouristLocation {
 
     @objc(removePhotos:)
     @NSManaged public func removeFromPhotos(_ values: NSOrderedSet)
+
+}
+
+// MARK: Generated accessors for pins
+extension TouristLocation {
+
+    @objc(addPinsObject:)
+    @NSManaged public func addToPins(_ value: Pin)
+
+    @objc(removePinsObject:)
+    @NSManaged public func removeFromPins(_ value: Pin)
+
+    @objc(addPins:)
+    @NSManaged public func addToPins(_ values: NSSet)
+
+    @objc(removePins:)
+    @NSManaged public func removeFromPins(_ values: NSSet)
 
 }
