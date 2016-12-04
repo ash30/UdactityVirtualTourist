@@ -15,21 +15,17 @@ import MapKit
 protocol PinDataSource: MapViewDataSource {
     
     var controller: NSFetchedResultsController<Pin> { get set }
-    weak var objectContext: NSManagedObjectContext? { get set }
-
-    // weak var viewController: MapDataViewController? { get set }
+    var objectContext: NSManagedObjectContext { get set }
     
 }
 
 extension PinDataSource {
     
     func totalAnnotations() -> Int {
-        guard let context = objectContext else {
-            return 0
-        }
+
         var i = 0
         
-        context.performAndWait {
+        objectContext.performAndWait {
             i = self.controller.fetchedObjects?.count ?? 0
         }
         
@@ -38,7 +34,7 @@ extension PinDataSource {
     
     func getAnnotation(mapView:MKMapView, forIndex:Int) {
         
-        objectContext?.perform {
+        objectContext.perform {
             
             if let locations = self.controller.fetchedObjects {
                 
@@ -57,17 +53,18 @@ extension PinDataSource {
 }
 
 
-class PinMapDataSource: NSObject, PinDataSource, PinCreator, NSFetchedResultsControllerDelegate {
+class PinMapDataSource: NSObject, PinDataSource, PinFactory, NSFetchedResultsControllerDelegate {
     
     // MARK: DEPS
     
     var controller: NSFetchedResultsController<Pin>
-    weak var objectContext: NSManagedObjectContext?
+    var objectContext: NSManagedObjectContext
+    
     weak var viewController: MapDataViewController?
 
     // MARK: INIT
     
-    init(objectContext: NSManagedObjectContext?, fetchResultController: NSFetchedResultsController<Pin>, viewController:MapDataViewController? ){
+    init(objectContext: NSManagedObjectContext, fetchResultController: NSFetchedResultsController<Pin>, viewController:MapDataViewController? ){
         
         // general property based init
        
