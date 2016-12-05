@@ -21,7 +21,7 @@
 		08BEF8521DEC87FF00A866F4 /* TouristLocation+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8501DEC87FF00A866F4 /* TouristLocation+CoreDataProperties.swift */; };
 		08BEF8591DEC88DB00A866F4 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8571DEC88DB00A866F4 /* Photo.swift */; };
 		08BEF85A1DEC88DB00A866F4 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8581DEC88DB00A866F4 /* Photo+CoreDataProperties.swift */; };
-		08BEF85C1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF85B1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift */; };
+		08BEF85C1DEC8A3700A866F4 /* MapViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF85B1DEC8A3700A866F4 /* MapViewDataSource.swift */; };
 		08BEF85F1DEC9FB200A866F4 /* FlickrPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF85E1DEC9FB200A866F4 /* FlickrPhotoService.swift */; };
 		08BEF8621DECA63E00A866F4 /* PinFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8611DECA63E00A866F4 /* PinFactory.swift */; };
 		08BEF8651DECA82A00A866F4 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8641DECA82A00A866F4 /* Promise.swift */; };
@@ -74,7 +74,7 @@
 		08BEF8501DEC87FF00A866F4 /* TouristLocation+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TouristLocation+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		08BEF8571DEC88DB00A866F4 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		08BEF8581DEC88DB00A866F4 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		08BEF85B1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewDataSource_protocols.swift; sourceTree = "<group>"; };
+		08BEF85B1DEC8A3700A866F4 /* MapViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewDataSource.swift; sourceTree = "<group>"; };
 		08BEF85E1DEC9FB200A866F4 /* FlickrPhotoService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrPhotoService.swift; sourceTree = "<group>"; };
 		08BEF8611DECA63E00A866F4 /* PinFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinFactory.swift; sourceTree = "<group>"; };
 		08BEF8641DECA82A00A866F4 /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
@@ -196,7 +196,7 @@
 				08BEF87A1DF362B400A866F4 /* TouristLocationFactory.swift */,
 				08BEF8611DECA63E00A866F4 /* PinFactory.swift */,
 				08BEF86C1DEF0B7100A866F4 /* PinDataSource.swift */,
-				08BEF85B1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift */,
+				08BEF85B1DEC8A3700A866F4 /* MapViewDataSource.swift */,
 			);
 			name = DataSources;
 			sourceTree = "<group>";
@@ -402,7 +402,7 @@
 				08BEF85A1DEC88DB00A866F4 /* Photo+CoreDataProperties.swift in Sources */,
 				08BEF8771DF33AE800A866F4 /* PhotoCollectionViewController.swift in Sources */,
 				08BEF8671DECAAF100A866F4 /* LocationService.swift in Sources */,
-				08BEF85C1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift in Sources */,
+				08BEF85C1DEC8A3700A866F4 /* MapViewDataSource.swift in Sources */,
 				0819F5001DEA2B7400063FD5 /* VirtualTourist.xcdatamodeld in Sources */,
 				08BEF8651DECA82A00A866F4 /* Promise.swift in Sources */,
 			);
