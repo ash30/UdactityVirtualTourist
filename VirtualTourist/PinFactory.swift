@@ -13,22 +13,12 @@ import CoreData
 
 // MARK: PROTOCOLS
 
-enum PinCreationMessages: String, RawRepresentableAsString{
-    case created = "PinCreated"
-    case failed = "PinCreationFailed"
-}
 
-protocol LocationFactory {
-    
+protocol PinFactory {
     var objectContext: NSManagedObjectContext { get set }
-    func createEntity(for location:CLLocation)
     
     func didCreate(entity:NSManagedObjectID)
     func didFailCreation(_: Error)
-}
-
-
-protocol PinFactory: LocationFactory {
 }
 
 extension PinFactory {
