@@ -21,7 +21,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let nav = window?.rootViewController as! UINavigationController
         let vc = nav.viewControllers.first! as! VirtualTouristMapViewController
         vc.data = DataManager.sharedInstance.mapDataSource
-        
+        vc.objectContext = DataManager.sharedInstance.persistentContainer.viewContext
+                
         return true
     }
 

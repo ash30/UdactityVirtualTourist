@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 import MapKit
 import CoreLocation
-
+import CoreData
 
 // MARK: ?
 
@@ -38,14 +38,14 @@ extension CreateOnLongPress {
         
         let pnt = mapView.convert(handler.location(in: mapView), toCoordinateFrom: mapView)
         let location = CLLocation.init(latitude: pnt.latitude, longitude: pnt.longitude)
-        data?.createPin(for: location)
+        data?.createEntity(for: location)
         
     }
 }
 
-// MARK: ???
+// MARK: ????
 
-class VirtualTouristMapViewController: UIViewController, CreateOnLongPress {
+class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, MKMapViewDelegate {
     
     // MARK: PROPERTIES
     
@@ -58,7 +58,9 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress {
     
     // MARK: DEPENDENCIES
     
+    // FIXME
     var data: PinMapDataSource?
+    var objectContext: NSManagedObjectContext!
     
     // MARK: LIFECYCLE
     
@@ -76,9 +78,56 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress {
     // MARK: TARGET ACTIONS
     
     @objc func longPresshandler(_ handler:UIGestureRecognizer){
+        guard handler.state == .began else {
+            return
+        }
         createOnLongPress(handler)
         loadData()
     }
+    
+    // MARK: SEGUES
+    
+    func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
+        //mapView.deselectAnnotation(mapView.selectedAnnotations.first!, animated: false)
+        performSegue(withIdentifier: "PhotoCollectionViewController", sender: self)
+
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        guard let ident = segue.identifier else {
+            return
+        }
+        
+        
+        switch ident {
+        case "PhotoCollectionViewController":
+            
+            let vc = segue.destination as! PhotoCollectionViewController
+            vc.setupDependencies(objectContext: objectContext)
+            
+            let pinId = (mapView.selectedAnnotations.first! as? SimpleLocationAnnotation)?.entityId
+            
+            if let pinId = pinId {
+                objectContext.perform {
+                    // FIXME OPTIONALS 
+                    // ALSO DOESN'T WORK FOR NEWLY CREATED!! 
+                    let pin = try? self.objectContext.existingObject(with: pinId)
+                    try? vc.setCurrentTouristLocation(basedOn: pin as! Pin)
+                }
+            }
+            mapView.deselectAnnotation(mapView.selectedAnnotations.first!, animated: false)
+
+
+            
+        default:
+            break
+            
+        }
+        
+        
+    }
+
     
     // MARK: HELPERS
     

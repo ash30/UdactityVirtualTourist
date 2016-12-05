@@ -13,29 +13,41 @@ import CoreData
 
 // MARK: PROTOCOLS
 
-protocol PinCreator {
-    
-    var objectContext: NSManagedObjectContext? { get set }
-    func createPin(for location:CLLocation)
-    func didFailCreation(_: Error)
-    
+enum PinCreationMessages: String, RawRepresentableAsString{
+    case created = "PinCreated"
+    case failed = "PinCreationFailed"
 }
 
-extension PinCreator {
+protocol LocationFactory {
     
-    func createPin(for location:CLLocation) {
-        
-        guard let context = objectContext else {
-            return
-        }
+    var objectContext: NSManagedObjectContext { get set }
+    func createEntity(for location:CLLocation)
+    
+    func didCreate(entity:NSManagedObjectID)
+    func didFailCreation(_: Error)
+}
+
+
+protocol PinFactory: LocationFactory {
+}
+
+extension PinFactory {
+    
+    func createEntity(for location:CLLocation) {
         
         let locationLat = location.coordinate.latitude
         let locationLong = location.coordinate.longitude
         
-        context.perform {
-            Pin(lat: locationLat, long: locationLong, context: context)
+        objectContext.performAndWait {
+            let newEntity = Pin(lat: locationLat, long: locationLong, context: self.objectContext)
+            do {
+                try self.objectContext.save()
+                self.didCreate(entity: newEntity.objectID)
+            }
+            catch {
+                self.didFailCreation(error)
+            }
         }
-        
     }
     
 }

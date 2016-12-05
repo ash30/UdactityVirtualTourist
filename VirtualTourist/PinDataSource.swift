@@ -40,7 +40,7 @@ extension PinDataSource {
                 
                 let data = locations[forIndex]
                 let annotation = SimpleLocationAnnotation.init(
-                    latitude: data.latitude, longitude: data.longitude
+                    latitude: data.latitude, longitude: data.longitude, entityId: data.objectID
                 )
                 
                 DispatchQueue.main.async{
@@ -53,7 +53,8 @@ extension PinDataSource {
 }
 
 
-class PinMapDataSource: NSObject, PinDataSource, PinFactory, NSFetchedResultsControllerDelegate {
+class PinMapDataSource: NSObject, PinDataSource, PinFactory, TouristLocationFactory, NSFetchedResultsControllerDelegate
+ {
     
     // MARK: DEPS
     
@@ -73,6 +74,8 @@ class PinMapDataSource: NSObject, PinDataSource, PinFactory, NSFetchedResultsCon
         self.viewController = viewController
         
         super.init()
+        
+        // FIXME: What if fetch fails
         controller.delegate = self
         try? controller.performFetch()
 
@@ -85,7 +88,6 @@ class PinMapDataSource: NSObject, PinDataSource, PinFactory, NSFetchedResultsCon
         let request: NSFetchRequest<Pin> = NSFetchRequest(entityName: Pin.entity().name!)
         request.fetchBatchSize = 10
         request.sortDescriptors = [NSSortDescriptor.init(key: "latitude", ascending: true)]
-
         
         let data = NSFetchedResultsController(fetchRequest: request, managedObjectContext: objectContext, sectionNameKeyPath: nil, cacheName: nil)
         
@@ -93,19 +95,25 @@ class PinMapDataSource: NSObject, PinDataSource, PinFactory, NSFetchedResultsCon
         
     }
     
-    // MARK: FETCH RESULT DELEGATE
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        
-        // Update controller to show latest data
-        print("updated")
-
-    }
-    
     // MARK: LOCATION CREATOR 
     
     func didFailCreation(_: Error) {
         fatalError()
+    }
+    
+    // MARK: ??
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print ("Updated")
+    }
+    
+    
+    func didCreate(entity:NSManagedObjectID){
+        objectContext.perform {
+            if let pin = self.objectContext.object(with: entity) as? Pin {
+                self.createTouristLocation(for:pin)
+            }
+            
+        }
     }
 
     

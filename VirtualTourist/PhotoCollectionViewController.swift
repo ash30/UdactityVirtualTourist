@@ -15,6 +15,7 @@ protocol TouristLocationView {
     var objectContext: NSManagedObjectContext! { get set }
     var touristLocationData: NSFetchedResultsController<TouristLocation>! { get }
     func setCurrentTouristLocation(basedOn entity:Pin) throws
+    func setViewState()
     
 }
 
@@ -26,6 +27,7 @@ extension TouristLocationView {
         }
         touristLocationData?.fetchRequest.predicate = NSPredicate(format: "%@ IN pins", argumentArray: [entity])
         try touristLocationData?.performFetch()
+        setViewState()
     }
     
 }
@@ -60,7 +62,18 @@ class PhotoCollectionViewController: UIViewController, TouristLocationView {
             }
         }
     }
+}
 
+extension PhotoCollectionViewController: NSFetchedResultsControllerDelegate {
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        
+        // Update controller to show latest data
+        setViewState()
+        
+    }
+    
+    
 }
 
 extension PhotoCollectionViewController {

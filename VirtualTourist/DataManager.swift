@@ -43,11 +43,16 @@ class DataManager {
         return container
     }()
     
-    lazy var mapDataSource: PinMapDataSource = {
-    
-        return PinMapDataSource(objectContext: self.persistentContainer.newBackgroundContext())
-        
+    lazy var mapViewObjectContext: NSManagedObjectContext = {
+        return self.persistentContainer.viewContext
     }()
+    
+    lazy var mapDataSource: PinMapDataSource = {
+        return PinMapDataSource(objectContext: self.mapViewObjectContext)
+    }()
+
+
+    
     
     // MARK: - Core Data stack
     
