@@ -11,14 +11,12 @@ import UIKit
 import CoreLocation
 import CoreData
 
-// MARK: PROTOCOLS
 
-
-protocol PinFactory {
-    var objectContext: NSManagedObjectContext { get set }
+protocol PinFactory: TouristLocationFactory {
     
-    func didCreate(entity:NSManagedObjectID)
+    var objectContext: NSManagedObjectContext { get set }
     func didFailCreation(_: Error)
+    
 }
 
 extension PinFactory {
@@ -32,14 +30,13 @@ extension PinFactory {
             let newEntity = Pin(lat: locationLat, long: locationLong, context: self.objectContext)
             do {
                 try self.objectContext.save()
-                self.didCreate(entity: newEntity.objectID)
+                self.createTouristLocation(for:newEntity)
             }
             catch {
                 self.didFailCreation(error)
             }
         }
     }
-    
 }
 
 // MARK: FULL CREATE

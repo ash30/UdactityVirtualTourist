@@ -19,3 +19,35 @@ protocol MapViewDataSource {
     
 }
 
+extension PinMapDataSource: MapViewDataSource {
+    
+    func totalAnnotations() -> Int {
+        
+        var i = 0
+        
+        objectContext.performAndWait {
+            i = self.controller.fetchedObjects?.count ?? 0
+        }
+        
+        return i
+    }
+    
+    func getAnnotation(mapView:MKMapView, forIndex:Int) {
+        
+        objectContext.perform {
+            
+            if let locations = self.controller.fetchedObjects {
+                
+                let data = locations[forIndex]
+                let annotation = SimpleLocationAnnotation.init(
+                    latitude: data.latitude, longitude: data.longitude, entityId: data.objectID
+                )
+                
+                DispatchQueue.main.async{
+                    mapView.addAnnotation(annotation)
+                }
+            }
+        }
+    }
+    
+}

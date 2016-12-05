@@ -9,43 +9,21 @@
 import Foundation
 import UIKit
 import MapKit
-import CoreLocation
 import CoreData
 
-// MARK: ?
 
-protocol MapDataViewController: class {
+// MARK: PROTOCOL
+
+protocol MapController: class {
     
     var mapView: MKMapView! { get set }
     var data: PinMapDataSource? { get set }
     
 }
 
-// MARK: ??
+// MARK: IMPLEMENTATION
 
-protocol CreateOnLongPress: MapDataViewController {
-    func createOnLongPress( _ handler:UIGestureRecognizer)
-}
-
-extension CreateOnLongPress {
-    
-    func createOnLongPress( _ handler:UIGestureRecognizer){
-        guard
-            case handler.state = UIGestureRecognizerState.began
-        else {
-            return
-        }
-        
-        let pnt = mapView.convert(handler.location(in: mapView), toCoordinateFrom: mapView)
-        let location = CLLocation.init(latitude: pnt.latitude, longitude: pnt.longitude)
-        data?.createEntity(for: location)
-        
-    }
-}
-
-// MARK: ????
-
-class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, MKMapViewDelegate {
+class VirtualTouristMapViewController: UIViewController, MapController, CreateGesture {
     
     // MARK: PROPERTIES
     
@@ -58,7 +36,6 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, MKMa
     
     // MARK: DEPENDENCIES
     
-    // FIXME
     var data: PinMapDataSource?
     var objectContext: NSManagedObjectContext!
     
@@ -72,7 +49,7 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, MKMa
         mapView.isUserInteractionEnabled = true
         
         // Load initial map view data
-        loadData()
+        displayMapData()
     }
     
     // MARK: TARGET ACTIONS
@@ -81,17 +58,41 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, MKMa
         guard handler.state == .began else {
             return
         }
-        createOnLongPress(handler)
-        loadData()
+        create(from: handler)
+        displayMapData()
     }
     
-    // MARK: SEGUES
+    // MARK: HELPERS
+    
+    func displayMapData(){
+        
+        guard let data = data else {
+            return
+        }
+        
+        mapView.removeAnnotations(mapView.annotations)
+        
+        for i in 0 ..< (data.totalAnnotations() ) {
+            data.getAnnotation(mapView: mapView, forIndex: i)
+        }
+    }
+    
+}
+
+// MARK: MAP DELEGATE
+
+extension VirtualTouristMapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        //mapView.deselectAnnotation(mapView.selectedAnnotations.first!, animated: false)
         performSegue(withIdentifier: "PhotoCollectionViewController", sender: self)
-
+        
     }
+    
+}
+
+// MARK: SEGUES
+
+extension VirtualTouristMapViewController {
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
@@ -110,15 +111,15 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, MKMa
             
             if let pinId = pinId {
                 objectContext.perform {
-                    // FIXME OPTIONALS 
-                    // ALSO DOESN'T WORK FOR NEWLY CREATED!! 
+                    // FIXME OPTIONALS
+                    // ALSO DOESN'T WORK FOR NEWLY CREATED!!
                     let pin = try? self.objectContext.existingObject(with: pinId)
                     try? vc.setCurrentTouristLocation(basedOn: pin as! Pin)
                 }
             }
             mapView.deselectAnnotation(mapView.selectedAnnotations.first!, animated: false)
-
-
+            
+            
             
         default:
             break
@@ -127,20 +128,4 @@ class VirtualTouristMapViewController: UIViewController, CreateOnLongPress, MKMa
         
         
     }
-
-    
-    // MARK: HELPERS
-    
-    func loadData(){
-        guard let data = data else {
-            return
-        }
-        
-        mapView.removeAnnotations(mapView.annotations)
-        
-        for i in 0 ..< (data.totalAnnotations() ) {
-            data.getAnnotation(mapView: mapView, forIndex: i)
-        }
-    }
-    
 }

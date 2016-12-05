@@ -23,7 +23,7 @@
 		08BEF85A1DEC88DB00A866F4 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8581DEC88DB00A866F4 /* Photo+CoreDataProperties.swift */; };
 		08BEF85C1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF85B1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift */; };
 		08BEF85F1DEC9FB200A866F4 /* FlickrPhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF85E1DEC9FB200A866F4 /* FlickrPhotoService.swift */; };
-		08BEF8621DECA63E00A866F4 /* PinCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8611DECA63E00A866F4 /* PinCreator.swift */; };
+		08BEF8621DECA63E00A866F4 /* PinFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8611DECA63E00A866F4 /* PinFactory.swift */; };
 		08BEF8651DECA82A00A866F4 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8641DECA82A00A866F4 /* Promise.swift */; };
 		08BEF8671DECAAF100A866F4 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8661DECAAF100A866F4 /* LocationService.swift */; };
 		08BEF86D1DEF0B7100A866F4 /* PinDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF86C1DEF0B7100A866F4 /* PinDataSource.swift */; };
@@ -32,9 +32,8 @@
 		08BEF8741DF169C800A866F4 /* Pin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8721DF169C800A866F4 /* Pin.swift */; };
 		08BEF8751DF169C800A866F4 /* Pin+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8731DF169C800A866F4 /* Pin+CoreDataProperties.swift */; };
 		08BEF8771DF33AE800A866F4 /* PhotoCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8761DF33AE700A866F4 /* PhotoCollectionViewController.swift */; };
-		08BEF8791DF360AE00A866F4 /* observable .swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8781DF360AE00A866F4 /* observable .swift */; };
 		08BEF87B1DF362B400A866F4 /* TouristLocationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF87A1DF362B400A866F4 /* TouristLocationFactory.swift */; };
-		08BEF87D1DF3678800A866F4 /* TouristLocationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF87C1DF3678800A866F4 /* TouristLocationDataSource.swift */; };
+		08BEF8871DF58A6000A866F4 /* CreateGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8861DF58A6000A866F4 /* CreateGesture.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,7 +76,7 @@
 		08BEF8581DEC88DB00A866F4 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		08BEF85B1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewDataSource_protocols.swift; sourceTree = "<group>"; };
 		08BEF85E1DEC9FB200A866F4 /* FlickrPhotoService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrPhotoService.swift; sourceTree = "<group>"; };
-		08BEF8611DECA63E00A866F4 /* PinCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinCreator.swift; sourceTree = "<group>"; };
+		08BEF8611DECA63E00A866F4 /* PinFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinFactory.swift; sourceTree = "<group>"; };
 		08BEF8641DECA82A00A866F4 /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		08BEF8661DECAAF100A866F4 /* LocationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		08BEF86C1DEF0B7100A866F4 /* PinDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinDataSource.swift; sourceTree = "<group>"; };
@@ -86,9 +85,8 @@
 		08BEF8721DF169C800A866F4 /* Pin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Pin.swift; sourceTree = "<group>"; };
 		08BEF8731DF169C800A866F4 /* Pin+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Pin+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		08BEF8761DF33AE700A866F4 /* PhotoCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewController.swift; sourceTree = "<group>"; };
-		08BEF8781DF360AE00A866F4 /* observable .swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "observable .swift"; sourceTree = "<group>"; };
 		08BEF87A1DF362B400A866F4 /* TouristLocationFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouristLocationFactory.swift; sourceTree = "<group>"; };
-		08BEF87C1DF3678800A866F4 /* TouristLocationDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouristLocationDataSource.swift; sourceTree = "<group>"; };
+		08BEF8861DF58A6000A866F4 /* CreateGesture.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateGesture.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +182,7 @@
 		08BEF8481DEC7CB600A866F4 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				08BEF8861DF58A6000A866F4 /* CreateGesture.swift */,
 				08BEF84D1DEC87CA00A866F4 /* TouristMapViewController.swift */,
 				08BEF8761DF33AE700A866F4 /* PhotoCollectionViewController.swift */,
 			);
@@ -194,11 +193,10 @@
 			isa = PBXGroup;
 			children = (
 				08BEF86E1DF0D55F00A866F4 /* SimpleLocation.swift */,
-				08BEF85B1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift */,
-				08BEF8611DECA63E00A866F4 /* PinCreator.swift */,
 				08BEF87A1DF362B400A866F4 /* TouristLocationFactory.swift */,
+				08BEF8611DECA63E00A866F4 /* PinFactory.swift */,
 				08BEF86C1DEF0B7100A866F4 /* PinDataSource.swift */,
-				08BEF87C1DF3678800A866F4 /* TouristLocationDataSource.swift */,
+				08BEF85B1DEC8A3700A866F4 /* MapViewDataSource_protocols.swift */,
 			);
 			name = DataSources;
 			sourceTree = "<group>";
@@ -215,7 +213,6 @@
 			isa = PBXGroup;
 			children = (
 				08BEF8641DECA82A00A866F4 /* Promise.swift */,
-				08BEF8781DF360AE00A866F4 /* observable .swift */,
 			);
 			name = Common;
 			sourceTree = "<group>";
@@ -388,21 +385,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				08BEF87B1DF362B400A866F4 /* TouristLocationFactory.swift in Sources */,
+				08BEF8871DF58A6000A866F4 /* CreateGesture.swift in Sources */,
 				0819F4FA1DEA2B7400063FD5 /* ViewController.swift in Sources */,
 				08BEF8751DF169C800A866F4 /* Pin+CoreDataProperties.swift in Sources */,
 				08BEF8711DF0DB3600A866F4 /* DataManager.swift in Sources */,
 				08BEF86D1DEF0B7100A866F4 /* PinDataSource.swift in Sources */,
 				08BEF8591DEC88DB00A866F4 /* Photo.swift in Sources */,
-				08BEF8621DECA63E00A866F4 /* PinCreator.swift in Sources */,
+				08BEF8621DECA63E00A866F4 /* PinFactory.swift in Sources */,
 				08BEF8521DEC87FF00A866F4 /* TouristLocation+CoreDataProperties.swift in Sources */,
-				08BEF87D1DF3678800A866F4 /* TouristLocationDataSource.swift in Sources */,
 				08BEF8741DF169C800A866F4 /* Pin.swift in Sources */,
 				0819F4F81DEA2B7400063FD5 /* AppDelegate.swift in Sources */,
 				08BEF84E1DEC87CA00A866F4 /* TouristMapViewController.swift in Sources */,
 				08BEF85F1DEC9FB200A866F4 /* FlickrPhotoService.swift in Sources */,
 				08BEF86F1DF0D55F00A866F4 /* SimpleLocation.swift in Sources */,
 				08BEF8511DEC87FF00A866F4 /* TouristLocation.swift in Sources */,
-				08BEF8791DF360AE00A866F4 /* observable .swift in Sources */,
 				08BEF85A1DEC88DB00A866F4 /* Photo+CoreDataProperties.swift in Sources */,
 				08BEF8771DF33AE800A866F4 /* PhotoCollectionViewController.swift in Sources */,
 				08BEF8671DECAAF100A866F4 /* LocationService.swift in Sources */,
