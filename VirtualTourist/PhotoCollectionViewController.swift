@@ -10,82 +10,103 @@ import Foundation
 import UIKit
 import CoreData
 
-protocol TouristLocationView {
-    
-    var objectContext: NSManagedObjectContext! { get set }
-    var touristLocationData: NSFetchedResultsController<TouristLocation>! { get }
-    func setCurrentTouristLocation(basedOn entity:Pin) throws
-    func setViewState()
-    
-}
 
-extension TouristLocationView {
-
-    func setCurrentTouristLocation(basedOn entity:Pin) throws  {
-        if let cacheName = touristLocationData?.cacheName {
-            NSFetchedResultsController<TouristLocation>.deleteCache(withName: cacheName)
-        }
-        touristLocationData?.fetchRequest.predicate = NSPredicate(format: "%@ IN pins", argumentArray: [entity])
-        try touristLocationData?.performFetch()
-        setViewState()
-    }
-    
-}
-
-class PhotoCollectionViewController: UIViewController, TouristLocationView {
+class PhotoCollectionViewController: UIViewController {
     
     // MARK: PROPERTIES
     
-    @IBOutlet weak var LocationName: UILabel!
+    @IBOutlet weak var LocationName: UILabel! {
+        didSet{
+            LocationName.font = UIFont(name: "HelveticaNeue-UltraLight", size: 40.0)
+            LocationName.adjustsFontSizeToFitWidth = false
+        }
+    }
     @IBOutlet weak var PhotoCollection: UICollectionView!
+    @IBOutlet var cellLayout: UICollectionViewFlowLayout!
+  
     var touristLocationData: NSFetchedResultsController<TouristLocation>!
     var objectContext: NSManagedObjectContext!
     
-    // MARK: LIFE CYCLE
+}
+
+// MARK: STORY BOARD INJECTION
+
+extension PhotoCollectionViewController {
+    
+    func setupDependencies(basedOn:Pin, from objectContext:NSManagedObjectContext){
+        
+        self.objectContext = objectContext
+        touristLocationData =  NSFetchedResultsController<TouristLocation>(
+            fetchRequest: basedOn.locationFetchRequest, managedObjectContext:objectContext,
+            sectionNameKeyPath: nil, cacheName: nil
+        )
+    }
+}
+
+// MARK: VC LIFE CYCLE
+
+extension PhotoCollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setViewState()
+        setLabelHeading()
+        setCollectionView()
+        touristLocationData.delegate = self
+    }
+
+    // MARK: SETUP HELPERS
+    
+    func setCollectionView(){
+        PhotoCollection?.collectionViewLayout = cellLayout
+        let containerWidth = view.frame.width
+        let cellwidth = ((containerWidth/2) - 10)
+        cellLayout.itemSize = CGSize.init(width: cellwidth, height: cellwidth)
     }
     
-    // MARK: HELPERS
-    
-    func setViewState(){
+    func setLabelHeading(){
         objectContext.perform {
-            if let currentTouristLocation = self.touristLocationData.fetchedObjects?.first {
-                
-                let name = currentTouristLocation.name
-                
-                DispatchQueue.main.async {
-                    self.LocationName.text = name ?? ""
-                }
+            guard
+                let location = self.touristLocationData.fetchedObjects?.first,
+                let name = location.name
+            else {
+                return
+            }
+            DispatchQueue.main.async {
+                self.LocationName.text = name
             }
         }
     }
 }
 
+// MARK: DELEGATE
+
 extension PhotoCollectionViewController: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        
-        // Update controller to show latest data
-        setViewState()
-        
+        setLabelHeading()
+        touristLocationData.delegate = nil // no longer needed
     }
-    
-    
 }
 
-extension PhotoCollectionViewController {
+// MARK: COLLECTION VIEW
+
+
+extension PhotoCollectionViewController: UICollectionViewDataSource {
     
-    func setupDependencies(objectContext:NSManagedObjectContext){
+    @objc func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
+        return 10 - (touristLocationData.fetchedObjects?.first?.photos?.count ?? 0)
+    }
+    
+    @objc func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    
         
-        self.objectContext = objectContext
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "default", for: indexPath)
         
-        let fetch: NSFetchRequest<TouristLocation> = TouristLocation.fetchRequest()
-        fetch.fetchBatchSize = 1
-        fetch.sortDescriptors = [NSSortDescriptor.init(key: "latitude", ascending: true)]
+        // setup cell
+        // blah
         
-        touristLocationData =  NSFetchedResultsController<TouristLocation>(fetchRequest: fetch, managedObjectContext:objectContext, sectionNameKeyPath: nil, cacheName: nil)
+        return cell
     }
 }
+
+
