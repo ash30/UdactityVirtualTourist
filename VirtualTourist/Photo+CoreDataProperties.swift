@@ -2,7 +2,7 @@
 //  Photo+CoreDataProperties.swift
 //  VirtualTourist
 //
-//  Created by Ashley Arthur on 28/11/2016.
+//  Created by Ashley Arthur on 10/12/2016.
 //  Copyright © 2016 AshArthur. All rights reserved.
 //
 
@@ -15,6 +15,8 @@ extension Photo {
         return NSFetchRequest<Photo>(entityName: "Photo");
     }
 
+    @NSManaged public var name: String?
+    @NSManaged public var image: NSData
     @NSManaged public var location: TouristLocation?
 
 }
