@@ -22,6 +22,16 @@ class EntityFactory: PinFactory, TouristLocationFactory, PhotoFactory {
         self.locationService = locationService
         self.photoService = photoService
     }
+    
+    func create(basedOn location:CLLocation, callback:@escaping (Pin?,Error?) -> Void) {
+        // call default implementation
+        (self as PinFactory).create(basedOn: location, callback: callback)
+        
+        // additionally, start prefetching photos
+        photoService.searchPhotos_byLocation(lat: location.coordinate.latitude, long: location.coordinate.longitude, seed: 1, callback: nil)
+    }
+
+    
 }
 
 protocol EntityCreator {
@@ -72,6 +82,10 @@ extension TouristLocationFactory {
             )
             .then(onSuccess: { (name) -> Void in
                 
+                guard pin.locationInfo == nil else {
+                    return // Cannot edit existing / somebody called this twice...
+                }
+                
                 self.context.perform {
                     pin.locationInfo = TouristLocation(
                         name: name, lat: pin.latitude, long: pin.longitude,
@@ -82,6 +96,10 @@ extension TouristLocationFactory {
                 
                 },
                   onReject: { (err) in
+                    
+                    guard pin.locationInfo == nil else {
+                        return
+                    }
                     
                     self.context.perform {
                         pin.locationInfo = TouristLocation(
@@ -109,7 +127,7 @@ extension PhotoFactory {
         
         photoService.searchPhotos_byLocation(
             lat: location.latitude, long: location.longitude, seed: 1
-        ){ (image: UIImage, err:Error?) -> Void in
+        ){ (image: Data, err:Error?) -> Void in
             
             guard err == nil else {
                 callback(nil,err)
@@ -117,7 +135,11 @@ extension PhotoFactory {
             }
             
             self.context.perform {
-                let p = Photo(context: self.context)
+                
+                // FIXME: HOW DO WE GET IMAGE NAME?
+                
+                let p = Photo(imageData: image, location: location, name: nil, context: self.context)
+                location.addToPhotos(p)
                 callback(p,nil)
             }
         }

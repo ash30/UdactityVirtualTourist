@@ -25,6 +25,7 @@ class VT_PhotoCollectionDataSource: NSObject, LivePhotoData {
     init(controller: NSFetchedResultsController<Photo>, objectContext:NSManagedObjectContext){
         self.controller = controller
         self.objectContext = objectContext
+        try? controller.performFetch() // FIXME: WHAT DO WE DO ABOUT ERRORS? 
         super.init()
     }
 }
@@ -47,7 +48,7 @@ extension VT_PhotoCollectionDataSource: UICollectionViewDataSource {
             let photo = self.controller.object(at: indexPath)
             
             // display image 
-            //cell.image.image = UIImage(data: photo.image as Data)
+            cell.image.image = UIImage(data: photo.image as Data)
         }
         return cell
         
@@ -87,7 +88,7 @@ extension VT_PhotoCollectionDataSource {
         )
         
         // ONLY SHOW PHOTOs FOR THIS LOCATION
-        //fetch.predicate = NSPredicate(format: "location == %@", argumentArray: [location])
+        fetch.predicate = NSPredicate(format: "location == %@", argumentArray: [location])
         self.init(controller: controller, objectContext:objectContext)
     }
 }

@@ -28,3 +28,18 @@ public class TouristLocation: NSManagedObject {
     }
     
 }
+
+extension TouristLocation {
+    
+    var photoFetchRequest: NSFetchRequest<Photo> {
+        
+        let fetch: NSFetchRequest<Photo> = Photo.fetchRequest()
+        fetch.fetchBatchSize = 10
+        fetch.sortDescriptors = [NSSortDescriptor.init(key: nil, ascending: true)]
+        
+        fetch.predicate = NSPredicate(format: "location == %@", argumentArray: [self])
+        return fetch
+    }
+    
+    
+}

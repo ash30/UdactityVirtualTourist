@@ -10,8 +10,7 @@ import Foundation
 import CoreData
 import MapKit
 
-class PinMapDataSource: NSObject, NSFetchedResultsControllerDelegate
- {
+class PinMapDataSource: NSObject, NSFetchedResultsControllerDelegate {
     
     // MARK: DEPS
     
@@ -34,16 +33,6 @@ class PinMapDataSource: NSObject, NSFetchedResultsControllerDelegate
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         // For some reason, fetch results only refresh if we are a delegate?
-    }
-    
-}
-
-// MARK: ENTITY FACTORY
-
-extension PinMapDataSource: PinFactory {
-    
-    func didFailCreation(_: Error) {
-        fatalError()
     }
     
 }

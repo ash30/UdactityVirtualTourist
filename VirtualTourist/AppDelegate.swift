@@ -22,7 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let vc = nav.viewControllers.first! as! VirtualTouristMapViewController
         vc.data = DataManager.sharedInstance.mapDataSource
         vc.objectContext = DataManager.sharedInstance.persistentContainer.viewContext
-                
+        vc.objectCreator = EntityFactory(
+            context:  DataManager.sharedInstance.persistentContainer.viewContext,
+            locationService: DefaultLocationFinder(), photoService: DefaultPhotoService())
         return true
     }
 

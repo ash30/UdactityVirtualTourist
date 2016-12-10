@@ -30,3 +30,17 @@ public class Pin: NSManagedObject {
     
 }
 
+extension Pin {
+    
+    var locationFetchRequest: NSFetchRequest<TouristLocation> {
+        
+        let fetch: NSFetchRequest<TouristLocation> = TouristLocation.fetchRequest()
+        fetch.fetchBatchSize = 1
+        fetch.sortDescriptors = [NSSortDescriptor.init(key: nil, ascending: true)]
+        
+        fetch.predicate = NSPredicate(format: "%@ IN pins", argumentArray: [self])
+        return fetch
+    }
+    
+    
+}

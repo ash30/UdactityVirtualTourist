@@ -21,11 +21,13 @@ class PhotoCollectionViewController: UIViewController {
             LocationName.adjustsFontSizeToFitWidth = false
         }
     }
-    @IBOutlet weak var PhotoCollection: UICollectionView!
+    @IBOutlet weak var PhotoCollection: UICollectionView! {
+        didSet{
+            PhotoCollection.dataSource = self
+        }
+    }
     @IBOutlet var cellLayout: UICollectionViewFlowLayout!
-  
-    var touristLocationData: NSFetchedResultsController<TouristLocation>!
-    var objectContext: NSManagedObjectContext!
+    var photos: LivePhotoData?
     
 }
 
@@ -33,14 +35,27 @@ class PhotoCollectionViewController: UIViewController {
 
 extension PhotoCollectionViewController {
     
-    func setupDependencies(basedOn:Pin, from objectContext:NSManagedObjectContext){
+    func setupDependencies(basedOn location:TouristLocation, from objectContext:NSManagedObjectContext){
         
-        self.objectContext = objectContext
-        touristLocationData =  NSFetchedResultsController<TouristLocation>(
-            fetchRequest: basedOn.locationFetchRequest, managedObjectContext:objectContext,
-            sectionNameKeyPath: nil, cacheName: nil
-        )
+        photos = VT_PhotoCollectionDataSource(location: location, objectContext: objectContext)
+        objectContext.perform {
+            let name = location.name ?? ""
+            DispatchQueue.main.async {
+                self.setLabelHeading(name: name)
+                self.PhotoCollection.reloadData()
+            }
+        }
     }
+}
+
+// MARK: FETCH CONTROLLER DELEGATE 
+
+extension PhotoCollectionViewController: NSFetchedResultsControllerDelegate {
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>){
+        return
+    }
+    
 }
 
 // MARK: VC LIFE CYCLE
@@ -49,9 +64,7 @@ extension PhotoCollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setLabelHeading()
         setCollectionView()
-        touristLocationData.delegate = self
     }
 
     // MARK: SETUP HELPERS
@@ -63,50 +76,35 @@ extension PhotoCollectionViewController {
         cellLayout.itemSize = CGSize.init(width: cellwidth, height: cellwidth)
     }
     
-    func setLabelHeading(){
-        objectContext.perform {
-            guard
-                let location = self.touristLocationData.fetchedObjects?.first,
-                let name = location.name
-            else {
-                return
-            }
-            DispatchQueue.main.async {
-                self.LocationName.text = name
-            }
-        }
+    func setLabelHeading(name:String){
+        self.LocationName.text = name
     }
 }
 
-// MARK: DELEGATE
-
-extension PhotoCollectionViewController: NSFetchedResultsControllerDelegate {
-    
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        setLabelHeading()
-        touristLocationData.delegate = nil // no longer needed
-    }
-}
-
-// MARK: COLLECTION VIEW
-
+// MARK: COLLECTION VIEW DATA SOURCE
 
 extension PhotoCollectionViewController: UICollectionViewDataSource {
     
+    // apply default cells if no data exists in data source
+    
     @objc func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
-        return 10 - (touristLocationData.fetchedObjects?.first?.photos?.count ?? 0)
+        let n = photos?.collectionView(collectionView, numberOfItemsInSection: section) ?? 0
+        return max(n,10)
     }
     
     @objc func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-    
         
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "default", for: indexPath)
+        guard
+            let n = photos?.collectionView(collectionView, numberOfItemsInSection: indexPath.section),
+            n > 0, // Some data exists
+            indexPath.item < n // we are requesting for an index within bounds of array
+        else {
+            // Data doesn't exist and we're are returning a default cell
+            return collectionView.dequeueReusableCell(withReuseIdentifier: "default", for: indexPath)
+        }
         
-        // setup cell
-        // blah
-        
-        return cell
+        // return cell from data source
+        return photos!.collectionView(collectionView, cellForItemAt: indexPath)
     }
 }
-
 

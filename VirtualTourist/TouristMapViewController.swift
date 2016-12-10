@@ -12,18 +12,9 @@ import MapKit
 import CoreData
 
 
-// MARK: PROTOCOL
-
-protocol MapController: class {
-    
-    var mapView: MKMapView! { get set }
-    var data: PinMapDataSource? { get set }
-    
-}
-
 // MARK: IMPLEMENTATION
 
-class VirtualTouristMapViewController: UIViewController, MapController, CreateGesture {
+class VirtualTouristMapViewController: UIViewController {
     
     // MARK: PROPERTIES
     
@@ -38,6 +29,7 @@ class VirtualTouristMapViewController: UIViewController, MapController, CreateGe
     
     var data: PinMapDataSource?
     var objectContext: NSManagedObjectContext!
+    var objectCreator: EntityFactory!
     
     // MARK: LIFECYCLE
     
@@ -58,8 +50,22 @@ class VirtualTouristMapViewController: UIViewController, MapController, CreateGe
         guard handler.state == .began else {
             return
         }
-        create(from: handler)
-        displayMapData()
+        let pnt = mapView.convert(handler.location(in: mapView), toCoordinateFrom: mapView)
+        let location = CLLocation.init(latitude: pnt.latitude, longitude: pnt.longitude)
+        
+        objectCreator.create(basedOn: location){ (pin:Pin?, err:Error?) in
+            
+            guard let pin = pin, err == nil else {
+                return // FIXME: How to handle Error?
+            }
+            
+            DispatchQueue.main.async {
+                // Display New Data
+                self.displayMapData()
+            }
+            
+        }
+        
     }
     
     // MARK: HELPERS
@@ -100,24 +106,57 @@ extension VirtualTouristMapViewController {
             return
         }
         
+        defer {
+            mapView.deselectAnnotation(mapView.selectedAnnotations.first!, animated: false)
+        }
+        
         
         switch ident {
         case "PhotoCollectionViewController":
             
             let vc = segue.destination as! PhotoCollectionViewController
-            vc.setupDependencies(objectContext: objectContext)
             
             let pinId = (mapView.selectedAnnotations.first! as? SimpleLocationAnnotation)?.entityId
-            
             if let pinId = pinId {
-                objectContext.perform {
-                    // FIXME OPTIONALS
-                    // ALSO DOESN'T WORK FOR NEWLY CREATED!!
-                    let pin = try? self.objectContext.existingObject(with: pinId)
-                    try? vc.setCurrentTouristLocation(basedOn: pin as! Pin)
+                objectContext.perform { [weak vc] in
+                    
+                    guard
+                        let object = try? self.objectContext.existingObject(with: pinId),
+                        let pin = object as? Pin,
+                        let vc = vc
+                    else {
+                        return
+                        // Really we should message vc to say NO DATA PAL!
+                    }
+                    
+                    if let location = pin.locationInfo {
+                        DispatchQueue.main.async {
+                            vc.setupDependencies(basedOn:location, from: self.objectContext)
+                        }
+                    }
+                        
+                    else { // defer setup until we have full location info
+                        self.objectCreator.create(basedOn: pin){ (l:TouristLocation?, err:Error?) in
+                            guard err == nil, let l=l else {
+                                return // WHAT DO WE DO IF THIS ERRORED???
+                            }
+                            self.objectCreator.create(basedOn: l) { (p:Photo?, err:Error?) in
+                                
+                                print(l,p)
+                                // DO SOMETHING ABOUT ERROR
+                                
+                            }
+                            
+                            
+                            DispatchQueue.main.async {
+                                vc.setupDependencies(basedOn:l, from: self.objectContext)
+                            }
+                            
+                        }
+                    }
+                    
                 }
             }
-            mapView.deselectAnnotation(mapView.selectedAnnotations.first!, animated: false)
             
             
             
