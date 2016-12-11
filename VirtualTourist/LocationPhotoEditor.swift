@@ -24,7 +24,7 @@ extension LocationPhotoEditor {
     func removePhoto(_ photo:Photo) throws {
 
         objectContext.delete(photo)
-        do{
+        do {
             try objectContext.save()
         }
     }
@@ -56,7 +56,7 @@ extension LocationPhotoEditor {
             
             guard err == nil else {
                 result.reject(error: err!)
-                return 
+                return
             }
             result.resolve(value: true)
         }

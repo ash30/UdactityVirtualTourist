@@ -34,10 +34,12 @@ class PhotoCollectionViewController: UIViewController {
     }
     
     @IBAction func refreshPhotos(_ sender: AnyObject) {
+        
         // FIXME: HOW TO STOP MULTI CLICK ?
+        
         let result = photos?.replacePhotos()
         result?.then(onSuccess: { _ in
-            //
+            
             }, onReject: { (err:Error) in
                 print("Error Replacing Photos")
                 print(err)
@@ -121,4 +123,29 @@ extension PhotoCollectionViewController: UICollectionViewDataSource {
         return photos!.collectionView(collectionView, cellForItemAt: indexPath)
     }
 }
+
+// MARK: COLLECTION VIEW DELEGATE 
+
+extension PhotoCollectionViewController: UICollectionViewDelegate {
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
+        
+        guard
+            let n = photos?.collectionView(collectionView, numberOfItemsInSection: indexPath.section),
+            n > 0, 
+            indexPath.item <= n
+        
+            else {
+                print("Not Removing place holder")
+                return // No data OR its a place holder cell
+        }
+        
+        if let result = photos?.removePhoto(index: indexPath), result == false {
+            print ("Error removing Photo")
+        }
+        
+    }
+    
+}
+
 

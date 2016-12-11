@@ -195,6 +195,9 @@
                                                 </view>
                                             </collectionViewCell>
                                         </cells>
+                                        <connections>
+                                            <outlet property="delegate" destination="oz7-m4-CNO" id="v5K-jD-AE8"/>
+                                        </connections>
                                     </collectionView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BZo-6U-nw6">
                                         <color key="backgroundColor" red="0.49559777220000001" green="0.49559777220000001" blue="0.49559777220000001" alpha="1" colorSpace="calibratedRGB"/>

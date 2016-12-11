@@ -23,6 +23,7 @@ protocol LivePhotoData: class, UICollectionViewDataSource {
     var delegate: NSFetchedResultsControllerDelegate? { get set }
     
     func replacePhotos() -> Promise<Bool>
+    func removePhoto(index:IndexPath) -> Bool
 }
 
 // MARK: CONCRETE 
@@ -44,6 +45,18 @@ class VT_PhotoCollectionDataSource: NSObject {
 }
 
 extension VT_PhotoCollectionDataSource: LivePhotoData, LocationPhotoEditor {
+    
+    func removePhoto(index:IndexPath) -> Bool {
+        let photo = controller.object(at: index)
+        
+        do{
+            try removePhoto(photo)
+            return true
+        }
+        catch {
+            return false
+        }
+    }
     
     func replacePhotos() -> Promise<Bool> {
         
