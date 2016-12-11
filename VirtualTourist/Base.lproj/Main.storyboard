@@ -196,6 +196,13 @@
                                             </collectionViewCell>
                                         </cells>
                                     </collectionView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BZo-6U-nw6">
+                                        <color key="backgroundColor" red="0.49559777220000001" green="0.49559777220000001" blue="0.49559777220000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal" title="Replace Photos"/>
+                                        <connections>
+                                            <action selector="refreshPhotos:" destination="oz7-m4-CNO" eventType="touchUpInside" id="CAO-wK-aba"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -203,7 +210,7 @@
                         <constraints>
                             <constraint firstItem="iMt-dr-2Ie" firstAttribute="centerX" secondItem="Qx7-73-s9j" secondAttribute="centerX" id="4pc-YG-ky5"/>
                             <constraint firstItem="iMt-dr-2Ie" firstAttribute="width" secondItem="Qx7-73-s9j" secondAttribute="width" id="9W0-wR-Blr"/>
-                            <constraint firstItem="Wzm-hA-TFL" firstAttribute="top" secondItem="iMt-dr-2Ie" secondAttribute="bottom" constant="-1" id="Pf1-7Q-djC"/>
+                            <constraint firstItem="Wzm-hA-TFL" firstAttribute="top" secondItem="iMt-dr-2Ie" secondAttribute="bottom" id="Pf1-7Q-djC"/>
                             <constraint firstItem="iMt-dr-2Ie" firstAttribute="top" secondItem="J2H-cp-6DU" secondAttribute="bottom" id="Srb-Qc-J4r"/>
                         </constraints>
                     </view>

@@ -30,7 +30,7 @@ import UIKit
 protocol PhotoService {
     
     // The service wil execute callback for each image
-    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((Data, Error?) -> Void)? )
+    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((NamedImageData, Error?) -> Void)? )
     
 }
 
@@ -41,32 +41,32 @@ protocol PhotoServicesEnabled {
 
 protocol PhotoServiceProvider: PhotoService {
     
-    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int) -> [Promise<Data>]
+    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int) -> [Promise<NamedImageData>]
 
 }
 
 
-
-
 struct FlickrPhotoService {
     
-    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int) -> [Promise<Data>] {
+    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int) -> [Promise<NamedImageData>] {
         
         
         // BLAH BLAH
-        let p = Promise<Data>()
+        let p = Promise<NamedImageData>()
         return [p]
         
     }
 }
 
 struct DefaultPhotoService: PhotoService{
-    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((Data, Error?) -> Void)? ) {
+    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((NamedImageData, Error?) -> Void)? ) {
         
         if let callback = callback {
             
             let d: Data = UIImagePNGRepresentation(UIImage(named: "util-mark6")!)!
-            callback(d, nil)
+            
+            
+            callback(NamedImageData(data:d,name:"TEST"), nil)
             
         }
     }

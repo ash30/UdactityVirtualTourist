@@ -123,11 +123,11 @@ protocol PhotoFactory {
 
 extension PhotoFactory {
     
-    func create(basedOn location:TouristLocation, callback:@escaping (Photo?,Error?) -> Void) {
+    func create(basedOn location:TouristLocation, callback:@escaping (Photo?,Error?) -> Void ) {
         
         photoService.searchPhotos_byLocation(
             lat: location.latitude, long: location.longitude, seed: 1
-        ){ (image: Data, err:Error?) -> Void in
+        ){ (image: NamedImageData, err:Error?) -> Void in
             
             guard err == nil else {
                 callback(nil,err)
@@ -135,16 +135,35 @@ extension PhotoFactory {
             }
             
             self.context.perform {
-                
-                // FIXME: HOW DO WE GET IMAGE NAME?
-                
-                let p = Photo(imageData: image, location: location, name: nil, context: self.context)
-                location.addToPhotos(p)
+                let p = Photo(
+                    imageData: image.data, location: location, name: image.name, context: self.context
+                )
                 callback(p,nil)
             }
         }
     
     }
+    
+    func prefetchPhotos(basedOn location:TouristLocation) -> Promise<Bool> {
+        
+        let p = Promise<Bool>()
+        
+        photoService.searchPhotos_byLocation(
+            lat: location.latitude, long: location.longitude, seed: 1)
+        
+        { (image: NamedImageData, err:Error?) -> Void in
+
+            // Inform the client of prefetching success
+            
+            guard err == nil else{
+                p.reject(error: err!)
+                return
+            }
+            p.resolve(value: true )
+        }
+        return p
+    }
+    
     
 }
 

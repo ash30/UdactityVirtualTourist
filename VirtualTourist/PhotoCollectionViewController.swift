@@ -27,17 +27,31 @@ class PhotoCollectionViewController: UIViewController {
         }
     }
     @IBOutlet var cellLayout: UICollectionViewFlowLayout!
-    var photos: LivePhotoData?
+    var photos: LivePhotoData? {
+        didSet{
+            photos?.delegate = self
+        }
+    }
     
+    @IBAction func refreshPhotos(_ sender: AnyObject) {
+        // FIXME: HOW TO STOP MULTI CLICK ?
+        let result = photos?.replacePhotos()
+        result?.then(onSuccess: { _ in
+            //
+            }, onReject: { (err:Error) in
+                print("Error Replacing Photos")
+                print(err)
+        })
+    }
 }
 
 // MARK: STORY BOARD INJECTION
 
 extension PhotoCollectionViewController {
     
-    func setupDependencies(basedOn location:TouristLocation, from objectContext:NSManagedObjectContext){
+    func setupDependencies(basedOn location:TouristLocation, from objectContext:NSManagedObjectContext, creator:EntityFactory){
         
-        photos = VT_PhotoCollectionDataSource(location: location, objectContext: objectContext)
+        photos = VT_PhotoCollectionDataSource(location: location, objectContext: objectContext, creator:creator)
         objectContext.perform {
             let name = location.name ?? ""
             DispatchQueue.main.async {
@@ -53,7 +67,7 @@ extension PhotoCollectionViewController {
 extension PhotoCollectionViewController: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>){
-        return
+        PhotoCollection.reloadData()
     }
     
 }
@@ -72,7 +86,7 @@ extension PhotoCollectionViewController {
     func setCollectionView(){
         PhotoCollection?.collectionViewLayout = cellLayout
         let containerWidth = view.frame.width
-        let cellwidth = ((containerWidth/2) - 10)
+        let cellwidth = ((containerWidth) - 20)
         cellLayout.itemSize = CGSize.init(width: cellwidth, height: cellwidth)
     }
     

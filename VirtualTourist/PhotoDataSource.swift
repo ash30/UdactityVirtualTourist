@@ -11,24 +11,89 @@ import CoreData
 import UIKit
 
 
+enum LivePhotoDataErrors: String, Error  {
+    
+    case noPhotosToReplace
+    case networkError
+    case coreDataError
+    
+}
+
 protocol LivePhotoData: class, UICollectionViewDataSource {
     var delegate: NSFetchedResultsControllerDelegate? { get set }
+    
+    func replacePhotos() -> Promise<Bool>
 }
 
 // MARK: CONCRETE 
 
-class VT_PhotoCollectionDataSource: NSObject, LivePhotoData {
+class VT_PhotoCollectionDataSource: NSObject {
     
     let controller: NSFetchedResultsController<Photo>
     let objectContext: NSManagedObjectContext
+    let creator: EntityFactory
 
-    init(controller: NSFetchedResultsController<Photo>, objectContext:NSManagedObjectContext){
+    init(controller: NSFetchedResultsController<Photo>, objectContext:NSManagedObjectContext, creator:EntityFactory){
         self.controller = controller
         self.objectContext = objectContext
+        self.creator = creator
+        
         try? controller.performFetch() // FIXME: WHAT DO WE DO ABOUT ERRORS? 
         super.init()
     }
 }
+
+extension VT_PhotoCollectionDataSource: LivePhotoData, LocationPhotoEditor {
+    
+    func replacePhotos() -> Promise<Bool> {
+        
+        let result = Promise<Bool>()
+        var location: TouristLocation? = nil
+
+        // 1)  Make sure there are photos existing to replace
+        
+        objectContext.performAndWait {
+            location  = self.controller.fetchedObjects?.first?.location
+        }
+        
+        guard let loc = location else {
+            result.reject(error: LivePhotoDataErrors.noPhotosToReplace)
+            return result
+        }
+
+        // 2) Next prefetch the replacement, no point replacing photos if the
+        // network is down ...
+        
+        let prefetch = creator.prefetchPhotos(basedOn: loc)
+        prefetch.then(
+            onSuccess: { _ in
+
+                // 3) Finally try and replace photos
+                let replace_result = self.replacePhotos(for: loc)
+                
+                replace_result.then(
+                    onSuccess: { _ in
+                        // No need to do anything, controller will auto update
+                    },
+                    onReject: { _ in
+                        
+                        // Something errored when deleting ... Report to VC
+                        result.reject(error: LivePhotoDataErrors.coreDataError)
+                        
+                    }
+                )
+                
+            },
+            onReject: { _ in
+                result.reject(error: LivePhotoDataErrors.networkError)
+            }
+        )
+        
+        return result
+    }
+    
+}
+
 
 // MARK: CollectionView interface
 
@@ -75,7 +140,7 @@ extension VT_PhotoCollectionDataSource {
 
 extension VT_PhotoCollectionDataSource {
     
-    convenience init(location:TouristLocation, objectContext: NSManagedObjectContext){
+    convenience init(location:TouristLocation, objectContext: NSManagedObjectContext, creator:EntityFactory){
         
         let fetch: NSFetchRequest<Photo> = Photo.fetchRequest()
         fetch.fetchBatchSize = 10
@@ -89,7 +154,8 @@ extension VT_PhotoCollectionDataSource {
         
         // ONLY SHOW PHOTOs FOR THIS LOCATION
         fetch.predicate = NSPredicate(format: "location == %@", argumentArray: [location])
-        self.init(controller: controller, objectContext:objectContext)
+        self.init(controller: controller, objectContext:objectContext, creator: creator)
     }
 }
+
 

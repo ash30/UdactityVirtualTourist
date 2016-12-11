@@ -131,7 +131,7 @@ extension VirtualTouristMapViewController {
                     
                     if let location = pin.locationInfo {
                         DispatchQueue.main.async {
-                            vc.setupDependencies(basedOn:location, from: self.objectContext)
+                            vc.setupDependencies(basedOn:location, from: self.objectContext, creator:self.objectCreator)
                         }
                     }
                         
@@ -149,7 +149,7 @@ extension VirtualTouristMapViewController {
                             
                             
                             DispatchQueue.main.async {
-                                vc.setupDependencies(basedOn:l, from: self.objectContext)
+                                vc.setupDependencies(basedOn:l, from: self.objectContext, creator:self.objectCreator)
                             }
                             
                         }
