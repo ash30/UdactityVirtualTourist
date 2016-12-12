@@ -144,9 +144,8 @@ extension PhotoCollectionViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath){
         
         guard
-            let n = photos?.collectionView(collectionView, numberOfItemsInSection: indexPath.section),
-            n > 0, 
-            indexPath.item <= n
+            let n = photos?.collectionView(collectionView, numberOfItemsInSection: indexPath.section),            
+            n >= indexPath.item + 1
         
             else {
                 print("Not Removing place holder")
