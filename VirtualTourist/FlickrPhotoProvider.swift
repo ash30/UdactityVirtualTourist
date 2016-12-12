@@ -64,6 +64,8 @@ struct FlickServiceConfig: ResourceServerDetails {
         case auth_token
         case lat
         case lon
+        case page
+        case per_page
     }
     
     enum Methods: String {
@@ -113,11 +115,17 @@ struct FlickrPhotoProvider: ServiceClient {
         baseURL.queryItems?.append(
             URLQueryItem(name: FlickServiceConfig.Params.lon.rawValue, value: "\(long)")
         )
+        baseURL.queryItems?.append(
+            URLQueryItem(name: FlickServiceConfig.Params.page.rawValue, value: "\(seed)")
+        )
+        baseURL.queryItems?.append(
+            URLQueryItem(name: FlickServiceConfig.Params.per_page.rawValue, value: "\(10)")
+        )
     
         // 2) Send of the request an parse the result
         
         var request = URLRequest(url: baseURL.url!)   // FIXME: GAURD AGAINST BAD URLS
-        request.cachePolicy = .returnCacheDataElseLoad
+        // request.cachePolicy = .returnCacheDataElseLoad
 
 
         let photoList = network.send(request: request)
@@ -154,7 +162,7 @@ struct FlickrPhotoProvider: ServiceClient {
         var request = URLRequest(url: url)
         
         // if we have prefetched it already, reuse the data 
-        request.cachePolicy = .returnCacheDataElseLoad
+        // request.cachePolicy = .returnCacheDataElseLoad
         
         return network.send(request: URLRequest(url: url))
         

@@ -144,12 +144,33 @@ extension PhotoFactory {
     
     }
     
-    func prefetchPhotos(basedOn location:TouristLocation) -> Promise<Bool> {
+    func recreate(basedOn location:TouristLocation, seed: Int, callback:@escaping (Photo?,Error?) -> Void ) {
+       
+        photoService.searchPhotos_byLocation(
+            lat: location.latitude, long: location.longitude, seed: seed
+        ){ (image: NamedImageData?, err:Error?) -> Void in
+            
+            guard err == nil, let image = image else {
+                callback(nil,err)
+                return
+            }
+            
+            self.context.perform {
+                let p = Photo(
+                    imageData: image.data, location: location, name: image.name, context: self.context
+                )
+                callback(p,nil)
+            }
+        }
+    }
+    
+    
+    func prefetchPhotos(basedOn location:TouristLocation, seed: Int = 1) -> Promise<Bool> {
         
         let p = Promise<Bool>()
         
         photoService.searchPhotos_byLocation(
-            lat: location.latitude, long: location.longitude, seed: 1)
+            lat: location.latitude, long: location.longitude, seed: seed)
         { (image: NamedImageData?, err:Error?) -> Void in
 
             // Inform the client of prefetching success

@@ -16,7 +16,8 @@ protocol LocationPhotoEditor {
     var objectContext: NSManagedObjectContext { get }
     
     func removePhoto(_ photo:Photo) throws
-    func replacePhotos(for location:TouristLocation) -> Promise<Bool>
+    func replacePhotos(for location:TouristLocation, newCollectionSeed:Int) -> Promise<Bool>
+
 }
 
 extension LocationPhotoEditor {
@@ -29,7 +30,7 @@ extension LocationPhotoEditor {
         }
     }
     
-    func replacePhotos(for location:TouristLocation) -> Promise<Bool> {
+    func replacePhotos(for location:TouristLocation, newCollectionSeed:Int) -> Promise<Bool> {
         
         let result = Promise<Bool>()
         
@@ -44,7 +45,7 @@ extension LocationPhotoEditor {
         catch {
             
             // 2) If report any core data errors to caller
-
+            print(error)
             result.reject(error: error)
             return result
             
@@ -52,7 +53,7 @@ extension LocationPhotoEditor {
         
         // 3) all went well, now report Photo creation status
 
-        creator.create(basedOn: location) { (p:Photo?, err:Error?) in
+        creator.recreate(basedOn: location, seed: newCollectionSeed) { (p:Photo?, err:Error?) in
             
             guard err == nil else {
                 result.reject(error: err!)

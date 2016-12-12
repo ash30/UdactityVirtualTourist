@@ -40,7 +40,7 @@ struct FlickrPhotoService: PhotoService {
         
         // 1) Get a list of photo references
         
-        let photos = serviceProvider.searchPhotos_byLocation(lat: lat, long: long, seed: 1)
+        let photos = serviceProvider.searchPhotos_byLocation(lat: lat, long: long, seed: seed)
         
         photos.then(
             onSuccess: { (refs:[FlickrPhotoReference]) in
@@ -51,7 +51,8 @@ struct FlickrPhotoService: PhotoService {
                 
                 // 2) Download the photo based on ref data
                 
-                for r in refs[0...9] {
+                // FIXME: NOT ALWAYS 10 PHOTOS
+                for r in refs[0...min(9,refs.count)] {
                     
                     self.serviceProvider.getPhoto(r).then(
                         

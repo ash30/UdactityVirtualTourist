@@ -84,12 +84,14 @@ extension VT_PhotoCollectionDataSource: LivePhotoData, LocationPhotoEditor {
         // 2) Next prefetch the replacement, no point replacing photos if the
         // network is down ...
         
-        let prefetch = creator.prefetchPhotos(basedOn: loc)
+        let newPhotoSeed = Int(arc4random_uniform(100))
+        
+        let prefetch = creator.prefetchPhotos(basedOn: loc, seed: newPhotoSeed)
         prefetch.then(
             onSuccess: { _ in
 
                 // 3) Finally try and replace photos
-                let replace_result = self.replacePhotos(for: loc)
+                let replace_result = self.replacePhotos(for: loc, newCollectionSeed: newPhotoSeed )
                 
                 replace_result.then(
                     onSuccess: { _ in
