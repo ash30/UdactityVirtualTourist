@@ -27,6 +27,12 @@ extension LocationFinderService {
         let p = Promise<String>()
         
         geoEncoder.reverseGeocodeLocation(location){ (place: [CLPlacemark]?, error: Error?) -> Void in
+            
+            guard error == nil else {
+                p.reject(error: error!)
+                return 
+            }
+            
             guard let placeName = place?.first?.locality else {
                 p.reject(error: LocationErrors.notFound)
                 return

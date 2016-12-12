@@ -102,7 +102,23 @@ extension TouristLocationFactory {
         )
         .then(
             onSuccess: { (name) -> Void in onResult(name:name)},
-            onReject: { _ in onResult(name:nil)}
+            onReject: { (err:Error) in
+                
+                // If the reason for failuer is no name found for place,
+                // create a nameless place, otherwise error properlly 
+                
+                if err is LocationErrors {
+                    switch err{
+                    case LocationErrors.notFound:
+                        onResult(name:nil)
+                    default:
+                        callback(nil,err)
+                    }
+                }
+                else {
+                    callback(nil,err)
+                }
+            }
         )
     }
 }

@@ -60,10 +60,8 @@ class VirtualTouristMapViewController: UIViewController {
             }
             
             DispatchQueue.main.async {
-                // Display New Data
                 self.displayMapData()
             }
-            
         }
         
     }
@@ -89,9 +87,43 @@ class VirtualTouristMapViewController: UIViewController {
 
 extension VirtualTouristMapViewController: MKMapViewDelegate {
     
+    // On selection - get pin model related to map annotation and start seguing
+    
     func mapView(_ mapView: MKMapView, didSelect view: MKAnnotationView) {
-        performSegue(withIdentifier: "PhotoCollectionViewController", sender: self)
         
+        getPinForSelectedAnnotation{ (pin: Pin?) in
+            guard let _ = pin else {
+                // Rogue Pin! try and remove it from the map
+                DispatchQueue.main.async {
+                    if let annotation = view.annotation {
+                        mapView.removeAnnotation(annotation)
+                    }
+                }
+                return
+            }
+
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: "PhotoCollectionViewController", sender: self)
+            }
+            
+        }
+    }
+    
+    // Helper
+    
+    func getPinForSelectedAnnotation(callback:@escaping (Pin?)->Void){
+        
+        self.objectContext.performAndWait {
+            guard
+                let pinId = (self.mapView.selectedAnnotations.first as? SimpleLocationAnnotation)?.entityId,
+                let object = try? self.objectContext.existingObject(with: pinId),
+                let pin = object as? Pin
+                else {
+                    callback(nil)
+                    return
+            }
+            callback(pin)
+        }
     }
     
 }
@@ -116,49 +148,47 @@ extension VirtualTouristMapViewController {
             
             let vc = segue.destination as! PhotoCollectionViewController
             
-            let pinId = (mapView.selectedAnnotations.first! as? SimpleLocationAnnotation)?.entityId
-            if let pinId = pinId {
-                objectContext.perform { [weak vc] in
-                    
-                    guard
-                        let object = try? self.objectContext.existingObject(with: pinId),
-                        let pin = object as? Pin,
-                        let vc = vc
-                    else {
-                        return
-                        // Really we should message vc to say NO DATA PAL!
+            getPinForSelectedAnnotation(){ [weak vc] (pin:Pin?) in
+                
+                guard let pin = pin else {
+                    return // we should have this covered in selection method
+                }
+                
+                // 1) If location exists for pin, set next vc
+                
+                if let location = pin.locationInfo {
+                    DispatchQueue.main.async {
+                        vc?.setupDependencies(basedOn:location, from: self.objectContext, creator:self.objectCreator)
                     }
-                    
-                    if let location = pin.locationInfo {
-                        DispatchQueue.main.async {
-                            vc.setupDependencies(basedOn:location, from: self.objectContext, creator:self.objectCreator)
+                }
+                
+                // 2) if not async the data and update vc later 
+                
+                else { // defer setup until we have full location info
+                    self.objectCreator.create(basedOn: pin){ (l:TouristLocation?, err:Error?) in
+                        guard err == nil, let l=l else {
+                            
+                            // if vc is being presented, pop it off
+                            if let _ = vc {
+                                print("Error Creating Location Entity")
+                                self.navigationController?.popViewController(animated: true)
+                            }
+                            return 
                         }
-                    }
+                        self.objectCreator.create(basedOn: l, seed: 1) { (p:Photo?, err:Error?) in
+                            
+                            print(l,p)
+                            // DO SOMETHING ABOUT ERROR
+                            
+                        }
                         
-                    else { // defer setup until we have full location info
-                        self.objectCreator.create(basedOn: pin){ (l:TouristLocation?, err:Error?) in
-                            guard err == nil, let l=l else {
-                                return // WHAT DO WE DO IF THIS ERRORED???
-                            }
-                            self.objectCreator.create(basedOn: l, seed: 1) { (p:Photo?, err:Error?) in
-                                
-                                print(l,p)
-                                // DO SOMETHING ABOUT ERROR
-                                
-                            }
-                            
-                            
-                            DispatchQueue.main.async {
-                                vc.setupDependencies(basedOn:l, from: self.objectContext, creator:self.objectCreator)
-                            }
-                            
+                        DispatchQueue.main.async {
+                            vc?.setupDependencies(basedOn:l, from: self.objectContext, creator:self.objectCreator)
                         }
+                        
                     }
-                    
                 }
             }
-            
-            
             
         default:
             break

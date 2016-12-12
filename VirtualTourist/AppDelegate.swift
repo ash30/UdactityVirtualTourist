@@ -18,7 +18,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let networkController = NetworkController(connection: URLSession.shared)
+        let urlconfig = URLSessionConfiguration.default
+        // DEBUG: Set timeout low so we can see network error handling
+        urlconfig.timeoutIntervalForRequest = 10
+        urlconfig.timeoutIntervalForResource = 10
+        let session = URLSession(configuration: urlconfig, delegate: nil, delegateQueue: nil)
+        
+        let networkController = NetworkController(connection: session)
         let photoService = FlickrPhotoService(networkController: networkController)
         
         
