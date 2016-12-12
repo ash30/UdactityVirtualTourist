@@ -116,7 +116,9 @@ struct FlickrPhotoProvider: ServiceClient {
     
         // 2) Send of the request an parse the result
         
-        let request = URLRequest(url: baseURL.url!)   // FIXME: GAURD AGAINST BAD URLS
+        var request = URLRequest(url: baseURL.url!)   // FIXME: GAURD AGAINST BAD URLS
+        request.cachePolicy = .returnCacheDataElseLoad
+
 
         let photoList = network.send(request: request)
         
@@ -148,6 +150,11 @@ struct FlickrPhotoProvider: ServiceClient {
             result.reject(error: FlickrProviderError.badPhotoUrl)
             return result
         }
+        
+        var request = URLRequest(url: url)
+        
+        // if we have prefetched it already, reuse the data 
+        request.cachePolicy = .returnCacheDataElseLoad
         
         return network.send(request: URLRequest(url: url))
         
