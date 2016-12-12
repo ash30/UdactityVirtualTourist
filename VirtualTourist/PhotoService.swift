@@ -51,8 +51,7 @@ struct FlickrPhotoService: PhotoService {
                 
                 // 2) Download the photo based on ref data
                 
-                // FIXME: NOT ALWAYS 10 PHOTOS
-                for r in refs[0...min(9,refs.count)] {
+                for r in refs[0..<min(10,refs.count)] {
                     
                     self.serviceProvider.getPhoto(r).then(
                         
