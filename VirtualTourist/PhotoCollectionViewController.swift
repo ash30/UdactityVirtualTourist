@@ -32,17 +32,24 @@ class PhotoCollectionViewController: UIViewController {
             photos?.delegate = self
         }
     }
+    var placeHolderNumber: Int = 10
     
     @IBAction func refreshPhotos(_ sender: AnyObject) {
         
         // FIXME: HOW TO STOP MULTI CLICK ?
+        let currentPlaceHolder = placeHolderNumber
+        placeHolderNumber = 10
         
         let result = photos?.replacePhotos()
         result?.then(onSuccess: { _ in
             
+            // reset place holder num
+            self.placeHolderNumber = 10
+            
             }, onReject: { (err:Error) in
                 print("Error Replacing Photos")
                 print(err)
+                self.placeHolderNumber = currentPlaceHolder // restore to prev
         })
     }
 }
@@ -55,7 +62,7 @@ extension PhotoCollectionViewController {
         
         photos = VT_PhotoCollectionDataSource(location: location, objectContext: objectContext, creator:creator)
         objectContext.perform {
-            let name = location.name ?? ""
+            let name = location.name ?? "  "
             DispatchQueue.main.async {
                 self.setLabelHeading(name: name)
                 self.PhotoCollection.reloadData()
@@ -118,7 +125,7 @@ extension PhotoCollectionViewController: UICollectionViewDataSource {
     
     @objc func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         let n = photos?.collectionView(collectionView, numberOfItemsInSection: section) ?? 0
-        return max(n,10)
+        return max(n,placeHolderNumber)
     }
     
     @objc func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -155,6 +162,7 @@ extension PhotoCollectionViewController: UICollectionViewDelegate {
         if let result = photos?.removePhoto(index: indexPath), result == false {
             print ("Error removing Photo")
         }
+        placeHolderNumber -= 1
         
     }
     
