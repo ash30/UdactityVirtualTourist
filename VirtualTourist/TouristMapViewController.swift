@@ -140,7 +140,7 @@ extension VirtualTouristMapViewController {
                             guard err == nil, let l=l else {
                                 return // WHAT DO WE DO IF THIS ERRORED???
                             }
-                            self.objectCreator.create(basedOn: l) { (p:Photo?, err:Error?) in
+                            self.objectCreator.create(basedOn: l, seed: 1) { (p:Photo?, err:Error?) in
                                 
                                 print(l,p)
                                 // DO SOMETHING ABOUT ERROR

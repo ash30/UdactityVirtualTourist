@@ -53,7 +53,7 @@ extension LocationPhotoEditor {
         
         // 3) all went well, now report Photo creation status
 
-        creator.recreate(basedOn: location, seed: newCollectionSeed) { (p:Photo?, err:Error?) in
+        creator.create(basedOn: location, seed: newCollectionSeed) { (p:Photo?, err:Error?) in
             
             guard err == nil else {
                 result.reject(error: err!)
