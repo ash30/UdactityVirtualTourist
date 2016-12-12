@@ -36,7 +36,11 @@ class PhotoCollectionViewController: UIViewController {
     
     @IBAction func refreshPhotos(_ sender: AnyObject) {
         
-        // FIXME: HOW TO STOP MULTI CLICK ?
+        // FIXME: STOP MULTI CLICK ?
+        
+        // reset place holder cell number, but record existing
+        // number incase we need to roll back 
+        
         let currentPlaceHolder = placeHolderNumber
         placeHolderNumber = 10
         
