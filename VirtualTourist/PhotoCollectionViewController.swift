@@ -80,16 +80,29 @@ extension PhotoCollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setCollectionView()
+        PhotoCollection?.collectionViewLayout = cellLayout
+        setupCollectionCellSize(viewSize: view.frame.size)
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        setupCollectionCellSize(viewSize: size)
     }
 
     // MARK: SETUP HELPERS
     
-    func setCollectionView(){
-        PhotoCollection?.collectionViewLayout = cellLayout
-        let containerWidth = view.frame.width
-        let cellwidth = ((containerWidth) - 20)
-        cellLayout.itemSize = CGSize.init(width: cellwidth, height: cellwidth)
+    func setupCollectionCellSize(viewSize: CGSize){
+        
+        if viewSize.height > viewSize.width {
+            // Portrait Mode 
+            let cellwidth = ((viewSize.width) - 20)
+            cellLayout.itemSize = CGSize.init(width: cellwidth, height: cellwidth)
+        }
+        else {
+            // Landscape
+            let cellwidth = ((viewSize.width/5) - 10)
+            cellLayout.itemSize = CGSize.init(width: cellwidth, height: cellwidth)
+        }
     }
     
     func setLabelHeading(name:String){
