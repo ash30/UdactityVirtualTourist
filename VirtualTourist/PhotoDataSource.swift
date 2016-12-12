@@ -33,6 +33,8 @@ class VT_PhotoCollectionDataSource: NSObject {
     let controller: NSFetchedResultsController<Photo>
     let objectContext: NSManagedObjectContext
     let creator: EntityFactory
+    
+    var parentEntity: NSManagedObjectID?
 
     init(controller: NSFetchedResultsController<Photo>, objectContext:NSManagedObjectContext, creator:EntityFactory){
         self.controller = controller
@@ -61,14 +63,19 @@ extension VT_PhotoCollectionDataSource: LivePhotoData, LocationPhotoEditor {
     func replacePhotos() -> Promise<Bool> {
         
         let result = Promise<Bool>()
-        var location: TouristLocation? = nil
 
         // 1)  Make sure there are photos existing to replace
+        var location: TouristLocation? = nil
         
-        objectContext.performAndWait {
-            location  = self.controller.fetchedObjects?.first?.location
+        if let parent = parentEntity{
+            location = objectContext.object(with: parent) as? TouristLocation
         }
-        
+        else{
+            objectContext.performAndWait {
+                location  = self.controller.fetchedObjects?.first?.location
+            }
+        }
+
         guard let loc = location else {
             result.reject(error: LivePhotoDataErrors.noPhotosToReplace)
             return result
@@ -168,6 +175,10 @@ extension VT_PhotoCollectionDataSource {
         // ONLY SHOW PHOTOs FOR THIS LOCATION
         fetch.predicate = NSPredicate(format: "location == %@", argumentArray: [location])
         self.init(controller: controller, objectContext:objectContext, creator: creator)
+        
+        // Record Location for later
+        parentEntity = location.objectID
+        
     }
 }
 
