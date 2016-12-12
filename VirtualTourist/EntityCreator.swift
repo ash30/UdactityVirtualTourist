@@ -127,9 +127,9 @@ extension PhotoFactory {
         
         photoService.searchPhotos_byLocation(
             lat: location.latitude, long: location.longitude, seed: 1
-        ){ (image: NamedImageData, err:Error?) -> Void in
+        ){ (image: NamedImageData?, err:Error?) -> Void in
             
-            guard err == nil else {
+            guard err == nil, let image = image else {
                 callback(nil,err)
                 return
             }
@@ -150,12 +150,11 @@ extension PhotoFactory {
         
         photoService.searchPhotos_byLocation(
             lat: location.latitude, long: location.longitude, seed: 1)
-        
-        { (image: NamedImageData, err:Error?) -> Void in
+        { (image: NamedImageData?, err:Error?) -> Void in
 
             // Inform the client of prefetching success
             
-            guard err == nil else{
+            guard err == nil, let image = image else{
                 p.reject(error: err!)
                 return
             }

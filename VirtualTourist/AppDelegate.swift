@@ -18,13 +18,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
+        let networkController = NetworkController(connection: URLSession.shared)
+        let photoService = FlickrPhotoService(networkController: networkController)
+        
+        
         let nav = window?.rootViewController as! UINavigationController
         let vc = nav.viewControllers.first! as! VirtualTouristMapViewController
         vc.data = DataManager.sharedInstance.mapDataSource
         vc.objectContext = DataManager.sharedInstance.persistentContainer.viewContext
         vc.objectCreator = EntityFactory(
             context:  DataManager.sharedInstance.persistentContainer.viewContext,
-            locationService: DefaultLocationFinder(), photoService: DefaultPhotoService())
+            locationService: DefaultLocationFinder(), photoService: photoService )
         return true
     }
 

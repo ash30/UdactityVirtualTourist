@@ -33,22 +33,19 @@ extension NetworkManager {
     
 }
 
-protocol NetworkEnabled {
-    var network: NetworkManager { get set }
-}
-
 // MARK: HTTP CLIENT
 
 protocol HTTPClient {
     
     var connection: URLSession { get }
+    var network: NetworkManager { get }
+
     func send(request:URLRequest) -> Promise<Data>
     func prefetch(request:URLRequest) -> Promise<Data>
-
     
 }
 
-extension HTTPClient where Self: NetworkEnabled {
+extension HTTPClient {
  
     func send(request:URLRequest) -> Promise<Data> {
         let (task, data) = CreateTask(request: request)

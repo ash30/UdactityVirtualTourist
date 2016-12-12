@@ -10,56 +10,15 @@ import Foundation
 import UIKit
 
 
-/*
-
- The Photo Service returns a set of UIImages, randomised for a given location
- 
- The provider has to return a fixed set of images based loc + page
- 
- the provider cache's is where the prefetch happens
- 
- It would be better if the photo service could take a callback which is called per photo
- provider returns list of photos promises!
- 
- If I search the photos already, that should cache the images
- 
- 
-*/
-
-
 protocol PhotoService {
     
     // The service wil execute callback for each image
-    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((NamedImageData, Error?) -> Void)? )
+    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((NamedImageData?, Error?) -> Void)? )
     
-}
-
-protocol PhotoServicesEnabled {
-    var photoServices: PhotoService { get set }
-}
-
-
-protocol PhotoServiceProvider: PhotoService {
-    
-    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int) -> [Promise<NamedImageData>]
-
-}
-
-
-struct FlickrPhotoService {
-    
-    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int) -> [Promise<NamedImageData>] {
-        
-        
-        // BLAH BLAH
-        let p = Promise<NamedImageData>()
-        return [p]
-        
-    }
 }
 
 struct DefaultPhotoService: PhotoService{
-    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((NamedImageData, Error?) -> Void)? ) {
+    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((NamedImageData?, Error?) -> Void)? ) {
         
         if let callback = callback {
             
@@ -72,6 +31,71 @@ struct DefaultPhotoService: PhotoService{
     }
 
 }
+
+struct FlickrPhotoService: PhotoService {
+    
+    let serviceProvider: FlickrPhotoProvider
+    
+    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((NamedImageData?, Error?) -> Void)? ) {
+        
+        // 1) Get a list of photo references
+        
+        let photos = serviceProvider.searchPhotos_byLocation(lat: lat, long: long, seed: 1)
+        
+        photos.then(
+            onSuccess: { (refs:[FlickrPhotoReference]) in
+            
+                guard let callback = callback else {
+                    return // nothing to report
+                }
+                
+                // 2) Download the photo based on ref data
+                
+                for r in refs[0...10] {
+                    
+                    self.serviceProvider.getPhoto(r).then(
+                        
+                        // 3) Report back result
+                        
+                        onSuccess: { (d:Data) in
+                            let image = NamedImageData(data:d,name:r.title)
+                            callback(image,nil)
+                        },
+                        onReject: { (err:Error) in
+                            callback(nil,err)
+                        }
+                    )
+                }
+            },
+            onReject: { (err:Error) in
+            
+                // notify that initial call failed
+                
+                if let callback = callback {
+                    callback(nil,err)
+                }
+                
+            }
+        )
+    }
+}
+
+// MARK: Convienence Init
+
+extension FlickrPhotoService {
+    
+    init (networkController:NetworkController) {
+        
+        let provider = FlickrPhotoProvider(resourceServerDetails: FlickServiceConfig(), network: networkController)
+        self.init(serviceProvider: provider)
+        
+    }
+    
+}
+
+
+
+
 
 
 
