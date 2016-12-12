@@ -45,7 +45,7 @@
             </objects>
             <point key="canvasLocation" x="394" y="81"/>
         </scene>
-        <!--Photo Collection View Controller-->
+        <!--Photo View-->
         <scene sceneID="4FU-Tc-EpD">
             <objects>
                 <viewController id="oz7-m4-CNO" customClass="PhotoCollectionViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
@@ -208,13 +208,6 @@
                                             <outlet property="delegate" destination="oz7-m4-CNO" id="v5K-jD-AE8"/>
                                         </connections>
                                     </collectionView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BZo-6U-nw6">
-                                        <color key="backgroundColor" red="0.49559777220000001" green="0.49559777220000001" blue="0.49559777220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                        <state key="normal" title="Replace Photos"/>
-                                        <connections>
-                                            <action selector="refreshPhotos:" destination="oz7-m4-CNO" eventType="touchUpInside" id="CAO-wK-aba"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                             </stackView>
                         </subviews>
@@ -226,6 +219,13 @@
                             <constraint firstItem="iMt-dr-2Ie" firstAttribute="top" secondItem="J2H-cp-6DU" secondAttribute="bottom" id="Srb-Qc-J4r"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" title="Photo View" id="Srl-VX-4pe">
+                        <barButtonItem key="rightBarButtonItem" title="Refresh" id="vjh-Qb-Qo1">
+                            <connections>
+                                <action selector="refreshPhotos:" destination="oz7-m4-CNO" id="YST-ku-wxt"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="LocationName" destination="jy5-fC-bc9" id="e6U-Oi-TWs"/>
                         <outlet property="PhotoCollection" destination="3Cz-rV-Y0o" id="9rc-ss-cdt"/>
