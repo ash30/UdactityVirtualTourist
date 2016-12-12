@@ -51,7 +51,7 @@ struct FlickrPhotoService: PhotoService {
                 
                 // 2) Download the photo based on ref data
                 
-                for r in refs[0...10] {
+                for r in refs[0...9] {
                     
                     self.serviceProvider.getPhoto(r).then(
                         
