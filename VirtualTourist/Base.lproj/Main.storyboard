@@ -233,9 +233,10 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="LocationName" destination="jy5-fC-bc9" id="e6U-Oi-TWs"/>
-                        <outlet property="PhotoCollection" destination="3Cz-rV-Y0o" id="9rc-ss-cdt"/>
                         <outlet property="cellLayout" destination="y33-VN-NHl" id="6GE-ep-hoM"/>
+                        <outlet property="locationName" destination="jy5-fC-bc9" id="Fxv-dt-lap"/>
+                        <outlet property="photoCollection" destination="3Cz-rV-Y0o" id="BIj-UB-cG5"/>
+                        <outlet property="refresh" destination="vjh-Qb-Qo1" id="3xc-Rm-GCJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qtb-Fo-HPI" userLabel="First Responder" sceneMemberID="firstResponder"/>

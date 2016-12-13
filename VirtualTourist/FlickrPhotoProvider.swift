@@ -17,7 +17,7 @@ enum FlickrProviderError: Error {
 
 struct FlickrPhotoReference {
     
-    let id: String // really this is an int but I think its too big?
+    let id: String
     let owner: String
     let secret: String
     let server: String

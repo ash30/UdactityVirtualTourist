@@ -17,20 +17,7 @@ protocol PhotoService {
     
 }
 
-struct DefaultPhotoService: PhotoService{
-    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((NamedImageData?, Error?) -> Void)? ) {
-        
-        if let callback = callback {
-            
-            let d: Data = UIImagePNGRepresentation(UIImage(named: "util-mark6")!)!
-            
-            
-            callback(NamedImageData(data:d,name:"TEST"), nil)
-            
-        }
-    }
-
-}
+// MARK: FLICKR
 
 struct FlickrPhotoService: PhotoService {
     
@@ -80,15 +67,33 @@ struct FlickrPhotoService: PhotoService {
     }
 }
 
-// MARK: Convienence Init
 
 extension FlickrPhotoService {
+    
+    // MARK: Convienence Init
     
     init (networkController:NetworkController) {
         
         let provider = FlickrPhotoProvider(resourceServerDetails: FlickServiceConfig(), network: networkController)
         self.init(serviceProvider: provider)
         
+    }
+    
+}
+
+// MARK: Debug Service
+
+struct DefaultPhotoService: PhotoService{
+    func searchPhotos_byLocation(lat:Double, long:Double, seed: Int, callback: ((NamedImageData?, Error?) -> Void)? ) {
+        
+        if let callback = callback {
+            
+            let d: Data = UIImagePNGRepresentation(UIImage(named: "util-mark6")!)!
+            
+            
+            callback(NamedImageData(data:d,name:"TEST"), nil)
+            
+        }
     }
     
 }

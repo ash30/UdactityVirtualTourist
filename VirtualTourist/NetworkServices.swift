@@ -20,7 +20,6 @@ protocol ResourceServerDetails {
     func url(forResource path:Path) -> NSURLComponents
 }
 
-// MARK: DEFAULTS
 extension ResourceServerDetails  {
     func url(forResource path:Path) -> NSURLComponents {
         let components = NSURLComponents()

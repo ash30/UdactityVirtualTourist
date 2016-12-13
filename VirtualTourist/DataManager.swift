@@ -43,15 +43,6 @@ class DataManager {
         return container
     }()
     
-    lazy var mapViewObjectContext: NSManagedObjectContext = {
-        return self.persistentContainer.viewContext
-    }()
-    
-    lazy var mapDataSource: PinMapDataSource = {
-        return PinMapDataSource(objectContext: self.persistentContainer.viewContext)
-    }()
-    
-    
     // MARK: - Core Data stack
     func saveContext () {
         let context = persistentContainer.viewContext

@@ -15,15 +15,15 @@ class PhotoCollectionViewController: UIViewController, ErrorFeedback {
     
     // MARK: PROPERTIES
     
-    @IBOutlet weak var LocationName: UILabel! {
+    @IBOutlet weak var locationName: UILabel! {
         didSet{
-            LocationName.font = UIFont(name: "HelveticaNeue-UltraLight", size: 40.0)
-            LocationName.adjustsFontSizeToFitWidth = false
+            locationName.font = UIFont(name: "HelveticaNeue-UltraLight", size: 40.0)
+            locationName.adjustsFontSizeToFitWidth = false
         }
     }
-    @IBOutlet weak var PhotoCollection: UICollectionView! {
+    @IBOutlet weak var photoCollection: UICollectionView! {
         didSet{
-            PhotoCollection.dataSource = self
+            photoCollection.dataSource = self
         }
     }
     @IBOutlet var cellLayout: UICollectionViewFlowLayout!
@@ -32,17 +32,17 @@ class PhotoCollectionViewController: UIViewController, ErrorFeedback {
             photos?.delegate = self
         }
     }
+    @IBOutlet weak var refresh: UIBarButtonItem!
+    
     var pendingPhotos: Int = 0 {
         didSet{
-            if PhotoCollection != nil {
-                PhotoCollection.reloadData()
+            if photoCollection != nil {
+                photoCollection.reloadData()
             }
         }
     }
     
     @IBAction func refreshPhotos(_ sender: AnyObject) {
-        
-        // FIXME: STOP MULTI CLICK ?
         
         // reset place holder cell number, but record existing
         // number incase we need to roll back 
@@ -80,7 +80,7 @@ extension PhotoCollectionViewController {
             let name = location.name ?? "  "
             DispatchQueue.main.async {
                 self.setLabelHeading(name: name)
-                self.PhotoCollection.reloadData()
+                self.photoCollection.reloadData()
             }
         }
     }
@@ -91,7 +91,7 @@ extension PhotoCollectionViewController {
 extension PhotoCollectionViewController: NSFetchedResultsControllerDelegate {
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>){
-        PhotoCollection.reloadData()
+        photoCollection.reloadData()
     }
     
 }
@@ -102,7 +102,7 @@ extension PhotoCollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        PhotoCollection?.collectionViewLayout = cellLayout
+        photoCollection?.collectionViewLayout = cellLayout
         setupCollectionCellSize(viewSize: view.frame.size)
     }
     
@@ -128,7 +128,7 @@ extension PhotoCollectionViewController {
     }
     
     func setLabelHeading(name:String){
-        self.LocationName.text = name
+        self.locationName.text = name
     }
 }
 

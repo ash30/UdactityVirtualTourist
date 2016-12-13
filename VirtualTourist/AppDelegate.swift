@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let nav = window?.rootViewController as! UINavigationController
         let vc = nav.viewControllers.first! as! VirtualTouristMapViewController
-        vc.data = DataManager.sharedInstance.mapDataSource
+        vc.data = PinMapDataSource(objectContext: DataManager.sharedInstance.persistentContainer.viewContext)
         vc.objectContext = DataManager.sharedInstance.persistentContainer.viewContext
         vc.objectCreator = EntityFactory(
             context:  DataManager.sharedInstance.persistentContainer.viewContext,

@@ -32,7 +32,7 @@ class PinMapDataSource: NSObject, NSFetchedResultsControllerDelegate {
     // MARK: FETCH CONTROLLER DELEGATE
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        // For some reason, fetch results only refresh if we are a delegate?
+        // For some reason, fetch results only refresh if we are a delegate
     }
     
 }

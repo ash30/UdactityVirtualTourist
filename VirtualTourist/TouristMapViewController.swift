@@ -142,7 +142,6 @@ extension VirtualTouristMapViewController {
             mapView.deselectAnnotation(mapView.selectedAnnotations.first!, animated: false)
         }
         
-        
         switch ident {
         case "PhotoCollectionViewController":
             
