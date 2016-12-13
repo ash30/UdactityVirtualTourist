@@ -11,7 +11,7 @@ import UIKit
 import CoreData
 
 
-class PhotoCollectionViewController: UIViewController {
+class PhotoCollectionViewController: UIViewController, ErrorFeedback {
     
     // MARK: PROPERTIES
     
@@ -63,6 +63,7 @@ class PhotoCollectionViewController: UIViewController {
                 print(err)
                 DispatchQueue.main.async {
                     self?.pendingPhotos = currentPlaceHolder // restore to prev
+                    self?.showErrorAlert(title: "Network Error", message: "Whoops! Can't refresh photos")
                 }
         })
     }
