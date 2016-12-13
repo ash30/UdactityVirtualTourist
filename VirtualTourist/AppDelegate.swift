@@ -61,16 +61,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Saves changes in the application's managed object context before the application terminates.
         //self.saveContext()
         
-        // FOR DEBUG, CLEAR OUT DATA
-        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
-        
-        do {
-            try DataManager.sharedInstance.persistentContainer.persistentStoreCoordinator.execute(deleteRequest, with: DataManager.sharedInstance.persistentContainer.viewContext)
-        } catch let error as NSError {
-            // TODO: handle the error
-        }
-        
+//        // FOR DEBUG, CLEAR OUT DATA
+//        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
+//        
+//        do {
+//            try DataManager.sharedInstance.persistentContainer.persistentStoreCoordinator.execute(deleteRequest, with: DataManager.sharedInstance.persistentContainer.viewContext)
+//        } catch let error as NSError {
+//            // TODO: handle the error
+//        }
+//        
         
         
     }
