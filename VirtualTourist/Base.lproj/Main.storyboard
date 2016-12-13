@@ -111,7 +111,7 @@
                                                     <outlet property="image" destination="dZH-8E-hDl" id="Ist-Y2-v1A"/>
                                                 </connections>
                                             </collectionViewCell>
-                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="default" id="ugU-Nm-Wxf">
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="default" id="ugU-Nm-Wxf" customClass="CollectionViewPlaceHolderCell" customModule="VirtualTourist" customModuleProvider="target">
                                                 <rect key="frame" x="65" y="0.0" width="50" height="50"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -133,6 +133,9 @@
                                                     <constraint firstItem="HkN-T5-vpG" firstAttribute="centerY" secondItem="ugU-Nm-Wxf" secondAttribute="centerY" id="Vqm-Td-gzP"/>
                                                     <constraint firstItem="0A6-GW-kka" firstAttribute="centerX" secondItem="ugU-Nm-Wxf" secondAttribute="centerX" id="vRS-K0-ToB"/>
                                                 </constraints>
+                                                <connections>
+                                                    <outlet property="progress" destination="0A6-GW-kka" id="0Mg-gl-JTH"/>
+                                                </connections>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="UNU-VJ-6Na">
                                                 <rect key="frame" x="130" y="0.0" width="50" height="50"/>

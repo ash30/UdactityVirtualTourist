@@ -24,6 +24,7 @@
 		08A242741DFE00EA000103B7 /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242731DFE00EA000103B7 /* NetworkController.swift */; };
 		08A242761DFE040B000103B7 /* NetworkServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242751DFE040B000103B7 /* NetworkServices.swift */; };
 		08A8A4F61DFFD6BC00C17564 /* ErrorReporting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A8A4F51DFFD6BC00C17564 /* ErrorReporting.swift */; };
+		08A8A4F91DFFDC8800C17564 /* CollectionViewPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A8A4F81DFFDC8800C17564 /* CollectionViewPlaceholderCell.swift */; };
 		08BEF8451DEC7BA300A866F4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08BEF8441DEC7BA300A866F4 /* MapKit.framework */; };
 		08BEF84E1DEC87CA00A866F4 /* TouristMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF84D1DEC87CA00A866F4 /* TouristMapViewController.swift */; };
 		08BEF8511DEC87FF00A866F4 /* TouristLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF84F1DEC87FF00A866F4 /* TouristLocation.swift */; };
@@ -85,6 +86,7 @@
 		08A242731DFE00EA000103B7 /* NetworkController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
 		08A242751DFE040B000103B7 /* NetworkServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkServices.swift; sourceTree = "<group>"; };
 		08A8A4F51DFFD6BC00C17564 /* ErrorReporting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorReporting.swift; sourceTree = "<group>"; };
+		08A8A4F81DFFDC8800C17564 /* CollectionViewPlaceholderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewPlaceholderCell.swift; sourceTree = "<group>"; };
 		08BEF8441DEC7BA300A866F4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		08BEF84D1DEC87CA00A866F4 /* TouristMapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouristMapViewController.swift; sourceTree = "<group>"; };
 		08BEF84F1DEC87FF00A866F4 /* TouristLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TouristLocation.swift; sourceTree = "<group>"; };
@@ -192,6 +194,7 @@
 			isa = PBXGroup;
 			children = (
 				08A242671DFCA0C2000103B7 /* CollectionViewPhotoCell.swift */,
+				08A8A4F81DFFDC8800C17564 /* CollectionViewPlaceholderCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 				08BEF8511DEC87FF00A866F4 /* TouristLocation.swift in Sources */,
 				08BEF85A1DEC88DB00A866F4 /* Photo+CoreDataProperties.swift in Sources */,
 				08BEF8771DF33AE800A866F4 /* PhotoCollectionViewController.swift in Sources */,
+				08A8A4F91DFFDC8800C17564 /* CollectionViewPlaceholderCell.swift in Sources */,
 				08A2426F1DFCC821000103B7 /* SimpleImage.swift in Sources */,
 				08BEF8671DECAAF100A866F4 /* LocationService.swift in Sources */,
 				08A242761DFE040B000103B7 /* NetworkServices.swift in Sources */,

@@ -150,7 +150,10 @@ extension PhotoCollectionViewController: UICollectionViewDataSource {
             indexPath.item < n // we are requesting for an index within bounds of array
         else {
             // Data doesn't exist and we're are returning a default cell
-            return collectionView.dequeueReusableCell(withReuseIdentifier: "default", for: indexPath)
+            let cell =  collectionView.dequeueReusableCell(withReuseIdentifier: "default", for: indexPath) as! CollectionViewPlaceHolderCell
+            cell.progress.startAnimating()
+            return cell
+            
         }
         
         // return cell from data source
