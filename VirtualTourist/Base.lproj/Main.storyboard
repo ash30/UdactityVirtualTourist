@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Virtual Tourist Map View Controller-->
+        <!--Map View-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="VirtualTouristMapViewController" customModule="VirtualTourist" customModuleProvider="target" sceneMemberID="viewController">
@@ -33,7 +33,7 @@
                             <constraint firstItem="Jb3-P9-dea" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kDW-mZ-i2o"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="ZwG-Ka-W4g"/>
+                    <navigationItem key="navigationItem" title="Map View" id="tiE-VP-kkI"/>
                     <connections>
                         <outlet property="longPessGesture" destination="I3m-hf-4cs" id="crg-zb-JEe"/>
                         <outlet property="mapView" destination="Jb3-P9-dea" id="fgM-4c-zsn"/>
@@ -118,17 +118,20 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PLACE HOLDER" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HkN-T5-vpG">
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HkN-T5-vpG">
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
+                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="0A6-GW-kka"/>
                                                     </subviews>
                                                 </view>
                                                 <color key="backgroundColor" red="0.86774839743589749" green="0.86774839743589749" blue="0.86774839743589749" alpha="1" colorSpace="calibratedRGB"/>
                                                 <constraints>
                                                     <constraint firstItem="HkN-T5-vpG" firstAttribute="centerX" secondItem="ugU-Nm-Wxf" secondAttribute="centerX" id="2f5-Ue-k4k"/>
+                                                    <constraint firstItem="0A6-GW-kka" firstAttribute="centerY" secondItem="ugU-Nm-Wxf" secondAttribute="centerY" id="ElA-h5-iEz"/>
                                                     <constraint firstItem="HkN-T5-vpG" firstAttribute="centerY" secondItem="ugU-Nm-Wxf" secondAttribute="centerY" id="Vqm-Td-gzP"/>
+                                                    <constraint firstItem="0A6-GW-kka" firstAttribute="centerX" secondItem="ugU-Nm-Wxf" secondAttribute="centerX" id="vRS-K0-ToB"/>
                                                 </constraints>
                                             </collectionViewCell>
                                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="UNU-VJ-6Na">

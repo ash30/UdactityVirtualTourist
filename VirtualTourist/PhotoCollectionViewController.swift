@@ -32,7 +32,13 @@ class PhotoCollectionViewController: UIViewController {
             photos?.delegate = self
         }
     }
-    var placeHolderNumber: Int = 10
+    var pendingPhotos: Int = 0 {
+        didSet{
+            if PhotoCollection != nil {
+                PhotoCollection.reloadData()
+            }
+        }
+    }
     
     @IBAction func refreshPhotos(_ sender: AnyObject) {
         
@@ -41,19 +47,23 @@ class PhotoCollectionViewController: UIViewController {
         // reset place holder cell number, but record existing
         // number incase we need to roll back 
         
-        let currentPlaceHolder = placeHolderNumber
-        placeHolderNumber = 10
+        let currentPlaceHolder = pendingPhotos
+        pendingPhotos = 10
         
         let result = photos?.replacePhotos()
-        result?.then(onSuccess: { _ in
+        result?.then(onSuccess: { [weak self] _ in
             
             // reset place holder num
-            self.placeHolderNumber = 10
+            DispatchQueue.main.async {
+                self?.pendingPhotos = 10
+            }
             
-            }, onReject: { (err:Error) in
+            }, onReject: { [weak self] (err:Error) in
                 print("Error Replacing Photos")
                 print(err)
-                self.placeHolderNumber = currentPlaceHolder // restore to prev
+                DispatchQueue.main.async {
+                    self?.pendingPhotos = currentPlaceHolder // restore to prev
+                }
         })
     }
 }
@@ -129,7 +139,7 @@ extension PhotoCollectionViewController: UICollectionViewDataSource {
     
     @objc func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int{
         let n = photos?.collectionView(collectionView, numberOfItemsInSection: section) ?? 0
-        return max(n,placeHolderNumber)
+        return max(n,pendingPhotos)
     }
     
     @objc func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -166,7 +176,7 @@ extension PhotoCollectionViewController: UICollectionViewDelegate {
         if let result = photos?.removePhoto(index: indexPath), result == false {
             print ("Error removing Photo")
         }
-        placeHolderNumber -= 1
+        pendingPhotos -= 1
         
     }
     

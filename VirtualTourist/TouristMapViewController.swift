@@ -14,7 +14,7 @@ import CoreData
 
 // MARK: IMPLEMENTATION
 
-class VirtualTouristMapViewController: UIViewController {
+class VirtualTouristMapViewController: UIViewController, ErrorFeedback {
     
     // MARK: PROPERTIES
     
@@ -164,22 +164,30 @@ extension VirtualTouristMapViewController {
                 
                 // 2) if not async the data and update vc later 
                 
-                else { // defer setup until we have full location info
+                else {
+                    DispatchQueue.main.async {
+                        vc?.pendingPhotos = 10
+                    }
+                    
                     self.objectCreator.create(basedOn: pin){ (l:TouristLocation?, err:Error?) in
                         guard err == nil, let l=l else {
                             
-                            // if vc is being presented, pop it off
+                            // 3.1) We Errored - if vc is still presented, pop it off
                             if let _ = vc {
                                 print("Error Creating Location Entity")
                                 self.navigationController?.popViewController(animated: true)
+                                self.showErrorAlert(title: "Network Error", message:"Unable to request location info" )
                             }
-                            return 
+                            return
                         }
+                        
+                        // 3.2) // Tourist location now exists, fill it with photos! 
+                        
                         self.objectCreator.create(basedOn: l, seed: 1) { (p:Photo?, err:Error?) in
                             
-                            print(l,p)
-                            // DO SOMETHING ABOUT ERROR
-                            
+                            DispatchQueue.main.async {
+                                vc?.pendingPhotos -= 1
+                            }
                         }
                         
                         DispatchQueue.main.async {
