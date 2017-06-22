@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import PromiseKit
 
 // MARK: MODELS
 
@@ -130,40 +131,33 @@ struct FlickrPhotoProvider: ServiceClient {
 
         let photoList = network.send(request: request)
         
-        return photoList.then(onSuccess: { (d:Data) throws -> [FlickrPhotoReference] in
+        return photoList.then { (d:Data) throws -> [FlickrPhotoReference] in
             
             guard
                 let json = self.decodeJson(d, jsonBuffering:0),
                 let photos = json["photos"] as? [String:Any],
                 let photoUrls = photos["photo"] as? [[String:Any]]
                 else {
-                    
-                    // FIXME: WE NEED TO THROW
                     throw FlickrProviderError.unrecognisedSearchResult
             }
-            
             return photoUrls.map{
                 FlickrPhotoReference.init(jsonResponse: $0)!
-
             }
-
-            }, onReject: nil
-        )
+        }
     }
     
     func getPhoto(_ ref:FlickrPhotoReference) -> Promise<Data> {
         
         guard let url = ref.url else {
-            let result = Promise<Data>()
-            result.reject(error: FlickrProviderError.badPhotoUrl)
-            return result
+            let result = Promise<Data>.pending()
+            result.reject(FlickrProviderError.badPhotoUrl)
+            return result.promise
         }
         
         var request = URLRequest(url: url)
         
         // if we have prefetched it already, reuse the data 
         request.cachePolicy = .returnCacheDataElseLoad
-        
         return network.send(request: URLRequest(url: url))
         
     }

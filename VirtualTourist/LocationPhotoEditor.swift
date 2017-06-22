@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import PromiseKit
 
 // Object for editing a locations assigned photos
 
@@ -32,7 +33,7 @@ extension LocationPhotoEditor {
     
     func replacePhotos(for location:TouristLocation, newCollectionSeed:Int) -> Promise<Bool> {
         
-        let result = Promise<Bool>()
+        let result = Promise<Bool>.pending()
         
         // 1) Mark the items for delete and save changes
         
@@ -46,8 +47,8 @@ extension LocationPhotoEditor {
             
             // 2) If report any core data errors to caller
             print(error)
-            result.reject(error: error)
-            return result
+            result.reject(error)
+            return result.promise
             
         }
         
@@ -56,13 +57,13 @@ extension LocationPhotoEditor {
         creator.create(basedOn: location, seed: newCollectionSeed) { (p:Photo?, err:Error?) in
             
             guard err == nil else {
-                result.reject(error: err!)
+                result.reject(err!)
                 return
             }
-            result.resolve(value: true)
+            result.fulfill(true)
         }
         
-        return result
+        return result.promise
     }
 
 }

@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import CoreLocation
 import CoreData
+import PromiseKit
 
 class EntityFactory: PinFactory, TouristLocationFactory, PhotoFactory {
 
@@ -100,26 +101,25 @@ extension TouristLocationFactory {
             CLLocation(latitude: CLLocationDegrees.init(pin.latitude),
                        longitude: CLLocationDegrees.init(pin.longitude))
         )
-        .then(
-            onSuccess: { (name) -> Void in onResult(name:name)},
-            onReject: { (err:Error) in
-                
-                // If the reason for failuer is no name found for place,
-                // create a nameless place, otherwise error properlly 
-                
-                if err is LocationErrors {
-                    switch err{
-                    case LocationErrors.notFound:
-                        onResult(name:nil)
-                    default:
-                        callback(nil,err)
-                    }
-                }
-                else {
+        .then { (name) -> () in
+            onResult(name: name)
+        }
+        .catch { (err:Error) in
+            
+            // If the reason for failuer is no name found for place,
+            // recover by creating a nameless place, otherwise reraise
+            if err is LocationErrors {
+                switch err{
+                case LocationErrors.notFound:
+                    onResult(name:nil)
+                default:
                     callback(nil,err)
                 }
             }
-        )
+            else {
+                callback(nil,err)
+            }
+        }
     }
 }
 
@@ -169,21 +169,19 @@ extension PhotoFactory {
         
         // Makes a call to photo service so result is cached in URL cache for later creation
         
-        let p = Promise<Bool>()
+        let p = Promise<Bool>.pending()
         
-        photoService.searchPhotos_byLocation(
-            lat: location.latitude, long: location.longitude, seed: seed)
+        photoService.searchPhotos_byLocation(lat: location.latitude, long: location.longitude, seed: seed)
         { (image: NamedImageData?, err:Error?) -> Void in
 
             // Inform the client of prefetching success
-            
-            guard err == nil, let image = image else{
-                p.reject(error: err!)
+            guard err == nil, let _ = image else{
+                p.reject(err!)
                 return
             }
-            p.resolve(value: true )
+            p.fulfill(true)
         }
-        return p
+        return p.promise
     }
     
     

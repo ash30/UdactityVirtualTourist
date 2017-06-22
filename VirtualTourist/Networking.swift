@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import PromiseKit
 
 // MARK: NETWORK ERRORS
 
@@ -60,7 +61,9 @@ extension HTTPClient {
     }
     
     func CreateTask(request:URLRequest) -> (URLSessionDataTask,Promise<Data>) {
-        let promisedData = Promise<Data>()
+        let promisedData = Promise<Data>.pending()
+        
+        
         let task = connection.dataTask(with: request){
             (data,response,error) in
             
@@ -68,7 +71,7 @@ extension HTTPClient {
                 error == nil,
                 let statusCode = (response as? HTTPURLResponse)?.statusCode
                 else {
-                    promisedData.reject(error: NetworkError.client(error!))
+                    promisedData.reject(NetworkError.client(error!))
                     return
             }
             
@@ -77,15 +80,15 @@ extension HTTPClient {
                 statusCode <= 299,
                 let data = data
                 else {
-                    promisedData.reject(error: NetworkError.server(statusCode))
+                    promisedData.reject(NetworkError.server(statusCode))
                     return
             }
             
             // IF ALL LOOKS GOOD, RESOLVE WITH DATA
-            promisedData.resolve(value: data)
+            promisedData.fulfill(data)
             
         }
-        return (task, promisedData)
+        return (task, promisedData.promise)
     }
 }
 

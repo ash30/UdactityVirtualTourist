@@ -29,41 +29,29 @@ struct FlickrPhotoService: PhotoService {
         
         let photos = serviceProvider.searchPhotos_byLocation(lat: lat, long: long, seed: seed)
         
-        photos.then(
-            onSuccess: { (refs:[FlickrPhotoReference]) in
+        guard let callback = callback else {
+            return // nothing to report
+        }
+        
+        _ = photos.then { (refs:[FlickrPhotoReference]) -> () in
             
-                guard let callback = callback else {
-                    return // nothing to report
+            for r in refs[0..<min(10,refs.count)] {
+                self.serviceProvider.getPhoto(r)
+                .then{ (d:Data) -> () in
+                    let image = NamedImageData(data:d,name:r.title)
+                    callback(image,nil)
                 }
-                
-                // 2) Download the photo based on ref data
-                
-                for r in refs[0..<min(10,refs.count)] {
-                    
-                    self.serviceProvider.getPhoto(r).then(
-                        
-                        // 3) Report back result
-                        
-                        onSuccess: { (d:Data) in
-                            let image = NamedImageData(data:d,name:r.title)
-                            callback(image,nil)
-                        },
-                        onReject: { (err:Error) in
-                            callback(nil,err)
-                        }
-                    )
-                }
-            },
-            onReject: { (err:Error) in
-            
-                // notify that initial call failed
-                
-                if let callback = callback {
+                .catch { (err:Error) in
                     callback(nil,err)
                 }
-                
             }
-        )
+        }
+        .catch {
+            (err:Error) in
+            // notify that initial call failed
+            callback(nil,err)
+
+        }
     }
 }
 

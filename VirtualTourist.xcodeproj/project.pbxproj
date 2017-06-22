@@ -36,7 +36,6 @@
 		08BEF85A1DEC88DB00A866F4 /* Photo+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8581DEC88DB00A866F4 /* Photo+CoreDataProperties.swift */; };
 		08BEF85C1DEC8A3700A866F4 /* MapViewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF85B1DEC8A3700A866F4 /* MapViewDataSource.swift */; };
 		08BEF85F1DEC9FB200A866F4 /* PhotoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF85E1DEC9FB200A866F4 /* PhotoService.swift */; };
-		08BEF8651DECA82A00A866F4 /* Promise.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8641DECA82A00A866F4 /* Promise.swift */; };
 		08BEF8671DECAAF100A866F4 /* LocationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF8661DECAAF100A866F4 /* LocationService.swift */; };
 		08BEF86D1DEF0B7100A866F4 /* PinDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF86C1DEF0B7100A866F4 /* PinDataSource.swift */; };
 		08BEF86F1DF0D55F00A866F4 /* SimpleLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08BEF86E1DF0D55F00A866F4 /* SimpleLocation.swift */; };
@@ -100,7 +99,6 @@
 		08BEF8581DEC88DB00A866F4 /* Photo+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Photo+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		08BEF85B1DEC8A3700A866F4 /* MapViewDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewDataSource.swift; sourceTree = "<group>"; };
 		08BEF85E1DEC9FB200A866F4 /* PhotoService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoService.swift; sourceTree = "<group>"; };
-		08BEF8641DECA82A00A866F4 /* Promise.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promise.swift; sourceTree = "<group>"; };
 		08BEF8661DECAAF100A866F4 /* LocationService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationService.swift; sourceTree = "<group>"; };
 		08BEF86C1DEF0B7100A866F4 /* PinDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PinDataSource.swift; sourceTree = "<group>"; };
 		08BEF86E1DF0D55F00A866F4 /* SimpleLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleLocation.swift; sourceTree = "<group>"; };
@@ -267,14 +265,6 @@
 			name = FlickrService;
 			sourceTree = "<group>";
 		};
-		08BEF8631DECA81D00A866F4 /* Common */ = {
-			isa = PBXGroup;
-			children = (
-				08BEF8641DECA82A00A866F4 /* Promise.swift */,
-			);
-			name = Common;
-			sourceTree = "<group>";
-		};
 		08BEF8681DECAAF800A866F4 /* LocationService */ = {
 			isa = PBXGroup;
 			children = (
@@ -301,7 +291,6 @@
 			children = (
 				08BEF86E1DF0D55F00A866F4 /* SimpleLocation.swift */,
 				08A2426E1DFCC821000103B7 /* SimpleImage.swift */,
-				08BEF8631DECA81D00A866F4 /* Common */,
 				08BEF85D1DEC8A4800A866F4 /* DataSources */,
 				08BEF8691DECAC6200A866F4 /* CoreData */,
 				08BEF8681DECAAF800A866F4 /* LocationService */,
@@ -492,7 +481,6 @@
 				08BEF85C1DEC8A3700A866F4 /* MapViewDataSource.swift in Sources */,
 				0819F5001DEA2B7400063FD5 /* VirtualTourist.xcdatamodeld in Sources */,
 				08A8A4F61DFFD6BC00C17564 /* ErrorReporting.swift in Sources */,
-				08BEF8651DECA82A00A866F4 /* Promise.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

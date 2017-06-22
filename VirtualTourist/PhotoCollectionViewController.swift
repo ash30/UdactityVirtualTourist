@@ -51,21 +51,21 @@ class PhotoCollectionViewController: UIViewController, ErrorFeedback {
         pendingPhotos = 10
         
         let result = photos?.replacePhotos()
-        result?.then(onSuccess: { [weak self] _ in
-            
-            // reset place holder num
+        result?.then{ [weak self] _ in
+           
             DispatchQueue.main.async {
                 self?.pendingPhotos = 10
             }
             
-            }, onReject: { [weak self] (err:Error) in
-                print("Error Replacing Photos")
-                print(err)
-                DispatchQueue.main.async {
-                    self?.pendingPhotos = currentPlaceHolder // restore to prev
-                    self?.showErrorAlert(title: "Network Error", message: "Whoops! Can't refresh photos")
-                }
-        })
+        }
+        .catch { [weak self] (err:Error) in
+            print("Error Replacing Photos")
+            print(err)
+            DispatchQueue.main.async {
+                self?.pendingPhotos = currentPlaceHolder // restore to prev
+                self?.showErrorAlert(title: "Network Error", message: "Whoops! Can't refresh photos")
+            }
+        }
     }
 }
 

@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreLocation
+import PromiseKit
 
 enum LocationErrors: Error{
     case notFound
@@ -24,22 +25,22 @@ extension LocationFinderService {
     
     func getNamefor(_ location:CLLocation) -> Promise<String> {
         
-        let p = Promise<String>()
+        let p = Promise<String>.pending()
         
         geoEncoder.reverseGeocodeLocation(location){ (place: [CLPlacemark]?, error: Error?) -> Void in
             
             guard error == nil else {
-                p.reject(error: error!)
+                p.reject(error!)
                 return 
             }
             
             guard let placeName = place?.first?.locality else {
-                p.reject(error: LocationErrors.notFound)
+                p.reject(LocationErrors.notFound)
                 return
             }
-            p.resolve(value: placeName)
+            p.fulfill(placeName)
         }
-        return p
+        return p.promise
     }
     
 }

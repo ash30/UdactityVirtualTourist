@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import UIKit
+import PromiseKit
 
 
 enum LivePhotoDataErrors: String, Error  {
@@ -62,7 +63,7 @@ extension VT_PhotoCollectionDataSource: LivePhotoData, LocationPhotoEditor {
     
     func replacePhotos() -> Promise<Bool> {
         
-        let result = Promise<Bool>()
+        let result = Promise<Bool>.pending()
 
         // 1)  Make sure there are photos existing to replace
         var location: TouristLocation? = nil
@@ -77,8 +78,8 @@ extension VT_PhotoCollectionDataSource: LivePhotoData, LocationPhotoEditor {
         }
 
         guard let loc = location else {
-            result.reject(error: LivePhotoDataErrors.noPhotosToReplace)
-            return result
+            result.reject(LivePhotoDataErrors.noPhotosToReplace)
+            return result.promise
         }
 
         // 2) Next prefetch the replacement, no point replacing photos if the
@@ -87,31 +88,18 @@ extension VT_PhotoCollectionDataSource: LivePhotoData, LocationPhotoEditor {
         let newPhotoSeed = Int(arc4random_uniform(100))
         
         let prefetch = creator.prefetchPhotos(basedOn: loc, seed: newPhotoSeed)
-        prefetch.then(
-            onSuccess: { _ in
-
-                // 3) Finally try and replace photos
-                let replace_result = self.replacePhotos(for: loc, newCollectionSeed: newPhotoSeed )
-                
-                replace_result.then(
-                    onSuccess: { _ in
-                        // No need to do anything, controller will auto update
-                    },
-                    onReject: { _ in
-                        
-                        // Something errored when deleting ... Report to VC
-                        result.reject(error: LivePhotoDataErrors.coreDataError)
-                        
-                    }
-                )
-                
-            },
-            onReject: { _ in
-                result.reject(error: LivePhotoDataErrors.networkError)
+        prefetch.then { _ in
+            
+            // Just catch errors, controller should auto update on success
+            _ = self.replacePhotos(for: loc, newCollectionSeed: newPhotoSeed ).catch { _ in
+                result.reject(LivePhotoDataErrors.coreDataError)
             }
-        )
+        }
+        .catch { _ in
+            result.reject(LivePhotoDataErrors.networkError)
+        }
         
-        return result
+        return result.promise
     }
     
 }
