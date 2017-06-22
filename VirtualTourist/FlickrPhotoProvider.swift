@@ -9,6 +9,8 @@
 import Foundation
 import PromiseKit
 
+private let API_KEY_PLIST_KEY = "FLICKR_API_KEY"
+
 // MARK: MODELS
 
 enum FlickrProviderError: Error {
@@ -79,7 +81,16 @@ struct FlickServiceConfig: ResourceServerDetails {
     
     let scheme : String = "https"
     let host: String = "api.flickr.com"
-    let Key: String = "92b39eb447a17d8dca0d4e606cd039c6"
+    let Key: String = {
+        guard
+            let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+            let dict = NSDictionary.init(contentsOfFile: path),
+            let val =  dict[API_KEY_PLIST_KEY] as? String
+        else {
+              return ""
+        }
+            return val
+    }()
 }
 
 struct FlickrPhotoProvider: ServiceClient {
