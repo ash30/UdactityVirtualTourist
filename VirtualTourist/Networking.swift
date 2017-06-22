@@ -16,100 +16,15 @@ enum NetworkError: Error  {
     case server(Int)
 }
 
-// MARK: NETWORK MANAGER
+// MARK: NETWORK CONTROLLER
 
-protocol NetworkManager {
+protocol NetworkController {
     
-    func submit(networkTask:URLSessionDataTask, level: DispatchQoS.QoSClass)
-    
-}
-
-extension NetworkManager {
-    
-    func submit(networkTask:URLSessionDataTask, level: DispatchQoS.QoSClass) {
-        DispatchQueue.global(qos: .background).async {
-            networkTask.resume()
-        }
-    }
-    
-}
-
-// MARK: HTTP CLIENT
-
-protocol HTTPClient {
-    
-    var connection: URLSession { get }
-    var network: NetworkManager { get }
-
-    func send(request:URLRequest) -> Promise<Data>
+    func fetch(request:URLRequest) -> Promise<Data>
     func prefetch(request:URLRequest) -> Promise<Data>
     
 }
 
-extension HTTPClient {
- 
-    func send(request:URLRequest) -> Promise<Data> {
-        let (task, data) = CreateTask(request: request)
-        network.submit(networkTask: task, level: .userInitiated)
-        return data
-    }
-    
-    func prefetch(request:URLRequest) -> Promise<Data> {
-        let (task, data) = CreateTask(request: request)
-        network.submit(networkTask: task, level: .background)
-        return data
-    }
-    
-    func CreateTask(request:URLRequest) -> (URLSessionDataTask,Promise<Data>) {
-        let promisedData = Promise<Data>.pending()
-        
-        
-        let task = connection.dataTask(with: request){
-            (data,response,error) in
-            
-            guard
-                error == nil,
-                let statusCode = (response as? HTTPURLResponse)?.statusCode
-                else {
-                    promisedData.reject(NetworkError.client(error!))
-                    return
-            }
-            
-            guard
-                statusCode >= 200,
-                statusCode <= 299,
-                let data = data
-                else {
-                    promisedData.reject(NetworkError.server(statusCode))
-                    return
-            }
-            
-            // IF ALL LOOKS GOOD, RESOLVE WITH DATA
-            promisedData.fulfill(data)
-            
-        }
-        return (task, promisedData.promise)
-    }
-}
 
-// MARK: SERVICE CLIENT
-
-protocol ServiceClient {
-}
-
-extension ServiceClient {
-    
-    func decodeJson(_ data:Data, jsonBuffering:Int?) -> [String:Any]?{
-        let truncated: Data = data.subdata(in: (jsonBuffering ?? 0)..<data.count)
-        guard
-            let json = (try? JSONSerialization.jsonObject(
-                with: truncated, options: .allowFragments)) as? [String:Any]
-            else {
-                return nil
-        }
-        return json
-        
-    }
-}
     
 

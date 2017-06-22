@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: HTTP SERVICES
+
 protocol RawRepresentableAsString {
     var rawValue: String { get }
 }
@@ -27,5 +29,25 @@ extension ResourceServerDetails  {
         components.host = host
         components.path = path.rawValue
         return components
+    }
+}
+
+// MARK: SERVICE CLIENT
+
+protocol ServiceClient {
+}
+
+extension ServiceClient {
+    
+    func decodeJson(_ data:Data, jsonBuffering:Int?) -> [String:Any]?{
+        let truncated: Data = data.subdata(in: (jsonBuffering ?? 0)..<data.count)
+        guard
+            let json = (try? JSONSerialization.jsonObject(
+                with: truncated, options: .allowFragments)) as? [String:Any]
+            else {
+                return nil
+        }
+        return json
+        
     }
 }

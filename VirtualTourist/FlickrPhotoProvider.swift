@@ -85,7 +85,7 @@ struct FlickServiceConfig: ResourceServerDetails {
 struct FlickrPhotoProvider: ServiceClient {
     
     var resourceServerDetails = FlickServiceConfig()
-    var network: HTTPClient
+    var network: NetworkController
     
     func searchPhotos_byLocation(lat:Double, long:Double, seed: Int) -> Promise<[FlickrPhotoReference]> {
         
@@ -129,7 +129,7 @@ struct FlickrPhotoProvider: ServiceClient {
         request.cachePolicy = .returnCacheDataElseLoad
 
 
-        let photoList = network.send(request: request)
+        let photoList = network.fetch(request: request)
         
         return photoList.then { (d:Data) throws -> [FlickrPhotoReference] in
             
@@ -158,7 +158,7 @@ struct FlickrPhotoProvider: ServiceClient {
         
         // if we have prefetched it already, reuse the data 
         request.cachePolicy = .returnCacheDataElseLoad
-        return network.send(request: URLRequest(url: url))
+        return network.fetch(request: URLRequest(url: url))
         
     }
 }

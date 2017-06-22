@@ -63,7 +63,7 @@ extension AppDelegate {
         container.register(FlickrPhotoService.self){ r in
             
             let session = r.resolve(URLSession.self)!
-            let networkController = NetworkController(connection: session)
+            let networkController = HTTPClient(connection: session)
             return FlickrPhotoService(networkController: networkController)
         }
         

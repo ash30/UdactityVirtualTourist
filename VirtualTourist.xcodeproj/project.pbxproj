@@ -24,8 +24,8 @@
 		08A242681DFCA0C2000103B7 /* CollectionViewPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242671DFCA0C2000103B7 /* CollectionViewPhotoCell.swift */; };
 		08A2426F1DFCC821000103B7 /* SimpleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A2426E1DFCC821000103B7 /* SimpleImage.swift */; };
 		08A242711DFD5A84000103B7 /* LocationPhotoEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242701DFD5A84000103B7 /* LocationPhotoEditor.swift */; };
-		08A242741DFE00EA000103B7 /* NetworkController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242731DFE00EA000103B7 /* NetworkController.swift */; };
-		08A242761DFE040B000103B7 /* NetworkServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242751DFE040B000103B7 /* NetworkServices.swift */; };
+		08A242741DFE00EA000103B7 /* HTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242731DFE00EA000103B7 /* HTTPClient.swift */; };
+		08A242761DFE040B000103B7 /* HTTPService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242751DFE040B000103B7 /* HTTPService.swift */; };
 		08A8A4F61DFFD6BC00C17564 /* ErrorReporting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A8A4F51DFFD6BC00C17564 /* ErrorReporting.swift */; };
 		08A8A4F91DFFDC8800C17564 /* CollectionViewPlaceholderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A8A4F81DFFDC8800C17564 /* CollectionViewPlaceholderCell.swift */; };
 		08BEF8451DEC7BA300A866F4 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 08BEF8441DEC7BA300A866F4 /* MapKit.framework */; };
@@ -87,8 +87,8 @@
 		08A242671DFCA0C2000103B7 /* CollectionViewPhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewPhotoCell.swift; sourceTree = "<group>"; };
 		08A2426E1DFCC821000103B7 /* SimpleImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleImage.swift; sourceTree = "<group>"; };
 		08A242701DFD5A84000103B7 /* LocationPhotoEditor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationPhotoEditor.swift; sourceTree = "<group>"; };
-		08A242731DFE00EA000103B7 /* NetworkController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkController.swift; sourceTree = "<group>"; };
-		08A242751DFE040B000103B7 /* NetworkServices.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkServices.swift; sourceTree = "<group>"; };
+		08A242731DFE00EA000103B7 /* HTTPClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPClient.swift; sourceTree = "<group>"; };
+		08A242751DFE040B000103B7 /* HTTPService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HTTPService.swift; sourceTree = "<group>"; };
 		08A8A4F51DFFD6BC00C17564 /* ErrorReporting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorReporting.swift; sourceTree = "<group>"; };
 		08A8A4F81DFFDC8800C17564 /* CollectionViewPlaceholderCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewPlaceholderCell.swift; sourceTree = "<group>"; };
 		08BEF8441DEC7BA300A866F4 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -208,8 +208,8 @@
 			isa = PBXGroup;
 			children = (
 				08A242651DF75E7A000103B7 /* Networking.swift */,
-				08A242751DFE040B000103B7 /* NetworkServices.swift */,
-				08A242731DFE00EA000103B7 /* NetworkController.swift */,
+				08A242731DFE00EA000103B7 /* HTTPClient.swift */,
+				08A242751DFE040B000103B7 /* HTTPService.swift */,
 			);
 			name = Network;
 			sourceTree = "<group>";
@@ -464,7 +464,7 @@
 				0819F4F81DEA2B7400063FD5 /* AppDelegate.swift in Sources */,
 				08BEF84E1DEC87CA00A866F4 /* TouristMapViewController.swift in Sources */,
 				083E46901DFEA22700FCE639 /* FlickrPhotoProvider.swift in Sources */,
-				08A242741DFE00EA000103B7 /* NetworkController.swift in Sources */,
+				08A242741DFE00EA000103B7 /* HTTPClient.swift in Sources */,
 				08BEF85F1DEC9FB200A866F4 /* PhotoService.swift in Sources */,
 				08BEF86F1DF0D55F00A866F4 /* SimpleLocation.swift in Sources */,
 				08A242711DFD5A84000103B7 /* LocationPhotoEditor.swift in Sources */,
@@ -474,7 +474,7 @@
 				08A8A4F91DFFDC8800C17564 /* CollectionViewPlaceholderCell.swift in Sources */,
 				08A2426F1DFCC821000103B7 /* SimpleImage.swift in Sources */,
 				08BEF8671DECAAF100A866F4 /* LocationService.swift in Sources */,
-				08A242761DFE040B000103B7 /* NetworkServices.swift in Sources */,
+				08A242761DFE040B000103B7 /* HTTPService.swift in Sources */,
 				082EB2011EFBB44000F6C101 /* AppDelegate+Container.swift in Sources */,
 				08A242681DFCA0C2000103B7 /* CollectionViewPhotoCell.swift in Sources */,
 				08A242661DF75E7A000103B7 /* Networking.swift in Sources */,
