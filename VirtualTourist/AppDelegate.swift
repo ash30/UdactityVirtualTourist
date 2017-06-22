@@ -8,33 +8,21 @@
 
 import UIKit
 import CoreData
+import Swinject
+import SwinjectStoryboard
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-
-
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        let urlconfig = URLSessionConfiguration.default
-        // DEBUG: Set timeout low so we can see network error handling
-        urlconfig.timeoutIntervalForRequest = 10
-        urlconfig.timeoutIntervalForResource = 10
-        let session = URLSession(configuration: urlconfig, delegate: nil, delegateQueue: nil)
-        
-        let networkController = NetworkController(connection: session)
-        let photoService = FlickrPhotoService(networkController: networkController)
-        
-        
-        let nav = window?.rootViewController as! UINavigationController
-        let vc = nav.viewControllers.first! as! VirtualTouristMapViewController
-        vc.data = PinMapDataSource(objectContext: DataManager.sharedInstance.persistentContainer.viewContext)
-        vc.objectContext = DataManager.sharedInstance.persistentContainer.viewContext
-        vc.objectCreator = EntityFactory(
-            context:  DataManager.sharedInstance.persistentContainer.viewContext,
-            locationService: DefaultLocationFinder(), photoService: photoService )
+        let storyboard = SwinjectStoryboard.create(name: "Main", bundle: nil, container: AppDelegate.container)
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window!.rootViewController = storyboard.instantiateInitialViewController()
+        window!.makeKeyAndVisible()
         return true
     }
 
