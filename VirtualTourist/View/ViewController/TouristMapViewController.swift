@@ -145,7 +145,14 @@ extension VirtualTouristMapViewController {
         switch ident {
         case "PhotoCollectionViewController":
             
-            let vc = segue.destination as! PhotoCollectionViewController
+            guard let vc = segue.destination as? PhotoCollectionViewController else {
+                print("Unrecognised vc in segue")
+                return
+            }
+            
+            vc.transitioningDelegate = transitioningDelegate
+            vc.modalPresentationStyle = .custom
+
             
             getPinForSelectedAnnotation(){ [weak vc] (pin:Pin?) in
                 

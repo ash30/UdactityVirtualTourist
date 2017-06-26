@@ -51,12 +51,20 @@ extension AppDelegate {
             let photoService = r.resolve(FlickrPhotoService.self)!
             vc.data = PinMapDataSource(objectContext: persistentData.viewContext)
             vc.objectContext = persistentData.viewContext
-            
+            vc.transitioningDelegate = r.resolve(MapViewTransitionDelegate.self)!
+            vc.modalPresentationStyle = .custom
+
             vc.objectCreator = EntityFactory(
                 context:  persistentData.viewContext,
                 locationService: DefaultLocationFinder(), photoService: photoService )
 
         }
+        
+        // VIEW CONTROLLER TRANSITION DELEGATE
+        container.register(MapViewTransitionDelegate.self){ r in
+            return MapViewTransitionDelegate()
+        }.inObjectScope(.container)
+    
         
         // PHOTO SERVICE
         

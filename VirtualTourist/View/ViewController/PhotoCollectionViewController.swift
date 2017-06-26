@@ -17,16 +17,21 @@ class PhotoCollectionViewController: UIViewController, ErrorFeedback {
     
     @IBOutlet weak var locationName: UILabel! {
         didSet{
-            locationName.font = UIFont(name: "HelveticaNeue-UltraLight", size: 40.0)
+            locationName.font = UIFont(name: "HelveticaNeue-UltraLight", size: 30.0)
             locationName.adjustsFontSizeToFitWidth = false
         }
     }
     @IBOutlet weak var photoCollection: UICollectionView! {
         didSet{
             photoCollection.dataSource = self
+            photoCollection.contentInset = UIEdgeInsetsMake(16.0, 16.0, 16.0, 16.0)
         }
     }
-    @IBOutlet var cellLayout: UICollectionViewFlowLayout!
+    @IBOutlet var cellLayout: UICollectionViewFlowLayout! {
+        didSet{
+            cellLayout.scrollDirection = .horizontal;
+        }
+    }
     var photos: LivePhotoData? {
         didSet{
             photos?.delegate = self
@@ -103,6 +108,15 @@ extension PhotoCollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         photoCollection?.collectionViewLayout = cellLayout
+    }
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         setupCollectionCellSize(viewSize: view.frame.size)
     }
     
@@ -115,16 +129,10 @@ extension PhotoCollectionViewController {
     
     func setupCollectionCellSize(viewSize: CGSize){
         
-        if viewSize.height > viewSize.width {
-            // Portrait Mode 
-            let cellwidth = ((viewSize.width) - 20)
-            cellLayout.itemSize = CGSize.init(width: cellwidth, height: cellwidth)
-        }
-        else {
-            // Landscape
-            let cellwidth = ((viewSize.width/5) - 10)
-            cellLayout.itemSize = CGSize.init(width: cellwidth, height: cellwidth)
-        }
+        let height = photoCollection.frame.height - (cellLayout.sectionInset.top * 2) - (photoCollection.contentInset.top * 2)
+        
+        cellLayout.itemSize = CGSize.init(width: height, height: height);
+
     }
     
     func setLabelHeading(name:String){
