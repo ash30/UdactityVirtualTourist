@@ -45,20 +45,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-        // Saves changes in the application's managed object context before the application terminates.
-        //self.saveContext()
+//         Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+//         Saves changes in the application's managed object context before the application terminates.
+//        self.saveContext()
         
-//        // FOR DEBUG, CLEAR OUT DATA
-//        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
-//        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
-//        
-//        do {
-//            try DataManager.sharedInstance.persistentContainer.persistentStoreCoordinator.execute(deleteRequest, with: DataManager.sharedInstance.persistentContainer.viewContext)
-//        } catch let error as NSError {
-//            // TODO: handle the error
-//        }
-//        
+        // FOR DEBUG, CLEAR OUT DATA
+        let fetchRequest: NSFetchRequest<Pin> = Pin.fetchRequest()
+        let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest as! NSFetchRequest<NSFetchRequestResult>)
+        let dataManager = AppDelegate.container.resolve(NSPersistentContainer.self)!
+        
+        
+        do {
+            try dataManager.persistentStoreCoordinator.execute(deleteRequest, with: dataManager.viewContext)
+        } catch  _ as NSError {
+            // TODO: handle the error
+        }
+        
         
         
     }
