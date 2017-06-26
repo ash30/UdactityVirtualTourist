@@ -191,6 +191,8 @@ extension VirtualTouristMapViewController {
                         
                         self.objectCreator.create(basedOn: l, seed: 1) { (p:Photo?, err:Error?) in
                             
+                            // FIXME: We don't actually do anything if photo creation errors...
+                            
                             DispatchQueue.main.async {
                                 vc?.pendingPhotos -= 1
                             }
