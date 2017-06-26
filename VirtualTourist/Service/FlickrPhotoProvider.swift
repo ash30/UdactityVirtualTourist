@@ -83,11 +83,11 @@ struct FlickServiceConfig: ResourceServerDetails {
     let host: String = "api.flickr.com"
     let Key: String = {
         guard
-            let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
+            let path = Bundle.main.path(forResource: "flickr", ofType: "plist"),
             let dict = NSDictionary.init(contentsOfFile: path),
             let val =  dict[API_KEY_PLIST_KEY] as? String
         else {
-              return ""
+            fatalError("NO FLICKR API KEY")
         }
             return val
     }()
