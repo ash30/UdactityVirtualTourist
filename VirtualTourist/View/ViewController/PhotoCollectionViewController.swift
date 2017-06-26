@@ -24,7 +24,6 @@ class PhotoCollectionViewController: UIViewController, ErrorFeedback {
     @IBOutlet weak var photoCollection: UICollectionView! {
         didSet{
             photoCollection.dataSource = self
-            photoCollection.contentInset = UIEdgeInsetsMake(16.0, 16.0, 16.0, 16.0)
         }
     }
     @IBOutlet var cellLayout: UICollectionViewFlowLayout! {
