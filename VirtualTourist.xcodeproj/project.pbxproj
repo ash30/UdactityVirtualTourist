@@ -22,7 +22,6 @@
 		082EB2461F014C9500F6C101 /* MapViewTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082EB2451F014C9500F6C101 /* MapViewTransitionDelegate.swift */; };
 		082EB2481F014D4100F6C101 /* MapViewDetailPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 082EB2471F014D4100F6C101 /* MapViewDetailPresentationController.swift */; };
 		083E46901DFEA22700FCE639 /* FlickrPhotoProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083E468F1DFEA22700FCE639 /* FlickrPhotoProvider.swift */; };
-		08A242631DF61790000103B7 /* EntityCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242621DF61790000103B7 /* EntityCreator.swift */; };
 		08A242661DF75E7A000103B7 /* Networking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242651DF75E7A000103B7 /* Networking.swift */; };
 		08A242681DFCA0C2000103B7 /* CollectionViewPhotoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A242671DFCA0C2000103B7 /* CollectionViewPhotoCell.swift */; };
 		08A2426F1DFCC821000103B7 /* SimpleImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A2426E1DFCC821000103B7 /* SimpleImage.swift */; };
@@ -87,7 +86,6 @@
 		082EB2451F014C9500F6C101 /* MapViewTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewTransitionDelegate.swift; sourceTree = "<group>"; };
 		082EB2471F014D4100F6C101 /* MapViewDetailPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewDetailPresentationController.swift; sourceTree = "<group>"; };
 		083E468F1DFEA22700FCE639 /* FlickrPhotoProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FlickrPhotoProvider.swift; sourceTree = "<group>"; };
-		08A242621DF61790000103B7 /* EntityCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntityCreator.swift; sourceTree = "<group>"; };
 		08A242651DF75E7A000103B7 /* Networking.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Networking.swift; sourceTree = "<group>"; };
 		08A242671DFCA0C2000103B7 /* CollectionViewPhotoCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewPhotoCell.swift; sourceTree = "<group>"; };
 		08A2426E1DFCC821000103B7 /* SimpleImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleImage.swift; sourceTree = "<group>"; };
@@ -314,7 +312,6 @@
 		08F939551DEC626000F7DF8D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				08A242621DF61790000103B7 /* EntityCreator.swift */,
 				08BEF86E1DF0D55F00A866F4 /* SimpleLocation.swift */,
 				08A2426E1DFCC821000103B7 /* SimpleImage.swift */,
 				08BEF85D1DEC8A4800A866F4 /* DataSources */,
@@ -478,7 +475,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				08A242631DF61790000103B7 /* EntityCreator.swift in Sources */,
 				082EB2461F014C9500F6C101 /* MapViewTransitionDelegate.swift in Sources */,
 				08BEF8751DF169C800A866F4 /* Pin+CoreDataProperties.swift in Sources */,
 				08BEF86D1DEF0B7100A866F4 /* PinDataSource.swift in Sources */,

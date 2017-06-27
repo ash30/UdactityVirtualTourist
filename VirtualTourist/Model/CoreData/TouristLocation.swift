@@ -8,6 +8,8 @@
 
 import Foundation
 import CoreData
+import PromiseKit
+import CoreLocation
 
 
 public class TouristLocation: NSManagedObject {
@@ -24,6 +26,22 @@ public class TouristLocation: NSManagedObject {
         }
         else {
             fatalError("Couldn't create Entity Description")
+        }
+    }
+    
+    class func create(basedOn pin:Pin, locationService: LocationFinderService, context:NSManagedObjectContext) -> Promise<TouristLocation>{
+        
+        // 1) Async Name for location and create location from result
+        
+        let locationName = locationService.getNamefor(
+            CLLocation(latitude: CLLocationDegrees.init(pin.latitude),
+                       longitude: CLLocationDegrees.init(pin.longitude))
+            )
+        return locationName.then { (name) -> (TouristLocation) in
+            TouristLocation(
+                name: name, lat: pin.latitude, long: pin.longitude,
+                context: context
+            )
         }
     }
     

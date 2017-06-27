@@ -17,15 +17,15 @@ enum LocationErrors: Error{
 protocol LocationFinderService {
     
     var geoEncoder: CLGeocoder { get set }
-    func getNamefor(_ location:CLLocation) -> Promise<String>
+    func getNamefor(_ location:CLLocation) -> Promise<String?>
     
 }
 
 extension LocationFinderService {
     
-    func getNamefor(_ location:CLLocation) -> Promise<String> {
+    func getNamefor(_ location:CLLocation) -> Promise<String?> {
         
-        let p = Promise<String>.pending()
+        let p = Promise<String?>.pending()
         
         geoEncoder.reverseGeocodeLocation(location){ (place: [CLPlacemark]?, error: Error?) -> Void in
             
@@ -33,11 +33,7 @@ extension LocationFinderService {
                 p.reject(error!)
                 return 
             }
-            
-            guard let placeName = place?.first?.locality else {
-                p.reject(LocationErrors.notFound)
-                return
-            }
+            let placeName = place?.first?.locality
             p.fulfill(placeName)
         }
         return p.promise

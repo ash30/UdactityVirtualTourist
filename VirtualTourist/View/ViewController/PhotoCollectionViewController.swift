@@ -77,9 +77,9 @@ class PhotoCollectionViewController: UIViewController, ErrorFeedback {
 
 extension PhotoCollectionViewController {
     
-    func setupDependencies(basedOn location:TouristLocation, from objectContext:NSManagedObjectContext, creator:EntityFactory){
+    func setupDependencies(basedOn location:TouristLocation, from objectContext:NSManagedObjectContext, photoService:PhotoService){
         
-        photos = VT_PhotoCollectionDataSource(location: location, objectContext: objectContext, creator:creator)
+        photos = VT_PhotoCollectionDataSource(location: location, objectContext: objectContext, photoService:photoService)
         objectContext.perform {
             let name = location.name ?? "  "
             DispatchQueue.main.async {

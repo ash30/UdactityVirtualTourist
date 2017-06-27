@@ -53,10 +53,8 @@ extension AppDelegate {
             vc.objectContext = persistentData.viewContext
             vc.transitioningDelegate = r.resolve(MapViewTransitionDelegate.self)!
             vc.modalPresentationStyle = .custom
-
-            vc.objectCreator = EntityFactory(
-                context:  persistentData.viewContext,
-                locationService: DefaultLocationFinder(), photoService: photoService )
+            vc.photoService = photoService
+            vc.locationService = DefaultLocationFinder()
 
         }
         

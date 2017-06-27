@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CoreLocation
 
 
 public class Pin: NSManagedObject {
@@ -28,6 +29,15 @@ public class Pin: NSManagedObject {
         }
     }
     
+    convenience init(location:CLLocation, context:NSManagedObjectContext) {
+        
+        let locationLat = location.coordinate.latitude
+        let locationLong = location.coordinate.longitude
+        self.init(lat:locationLat, long:locationLong, context:context )
+        
+    }
+    
+
 }
 
 extension Pin {

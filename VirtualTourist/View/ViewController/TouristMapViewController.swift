@@ -29,7 +29,8 @@ class VirtualTouristMapViewController: UIViewController, ErrorFeedback {
     
     var data: PinMapDataSource?
     var objectContext: NSManagedObjectContext!
-    var objectCreator: EntityFactory!
+    var photoService: PhotoService!
+    var locationService: LocationFinderService!
     
     // MARK: LIFECYCLE
     
@@ -52,18 +53,15 @@ class VirtualTouristMapViewController: UIViewController, ErrorFeedback {
         }
         let pnt = mapView.convert(handler.location(in: mapView), toCoordinateFrom: mapView)
         let location = CLLocation.init(latitude: pnt.latitude, longitude: pnt.longitude)
-        
-        objectCreator.create(basedOn: location){ (pin:Pin?, err:Error?) in
-            
-            guard let pin = pin, err == nil else {
-                return // FIXME: How to handle Error?
-            }
-            
-            DispatchQueue.main.async {
-                self.displayMapData()
-            }
+        do {
+            _ = Pin.init(location: location, context: objectContext)
+            try self.objectContext.save()
+            self.displayMapData()
         }
-        
+        catch {
+            self.showErrorAlert(title: "Error Creating Pin", message:"Unable to Save" )
+ 
+        }
     }
     
     // MARK: HELPERS
@@ -73,7 +71,6 @@ class VirtualTouristMapViewController: UIViewController, ErrorFeedback {
         guard let data = data else {
             return
         }
-        
         mapView.removeAnnotations(mapView.annotations)
         
         for i in 0 ..< (data.totalAnnotations() ) {
@@ -150,9 +147,12 @@ extension VirtualTouristMapViewController {
                 return
             }
             
+            // Setup presentation to be custom modal
             vc.transitioningDelegate = transitioningDelegate
             vc.modalPresentationStyle = .custom
 
+            
+            // Setup Detail View with location info 
             
             getPinForSelectedAnnotation(){ [weak vc] (pin:Pin?) in
                 
@@ -164,7 +164,7 @@ extension VirtualTouristMapViewController {
                 
                 if let location = pin.locationInfo {
                     DispatchQueue.main.async {
-                        vc?.setupDependencies(basedOn:location, from: self.objectContext, creator:self.objectCreator)
+                        vc?.setupDependencies(basedOn:location, from: self.objectContext, photoService:self.photoService)
                     }
                 }
                 
@@ -175,34 +175,32 @@ extension VirtualTouristMapViewController {
                         vc?.pendingPhotos = 10
                     }
                     
-                    self.objectCreator.create(basedOn: pin){ (l:TouristLocation?, err:Error?) in
-                        guard err == nil, let l=l else {
-                            
-                            // 3.1) We Errored - if vc is still presented, pop it off
-                            if let _ = vc {
-                                print("Error Creating Location Entity")
-                                self.navigationController?.popViewController(animated: true)
-                                self.showErrorAlert(title: "Network Error", message:"Unable to request location info" )
-                            }
-                            return
+                    TouristLocation.create(basedOn: pin, locationService: self.locationService, context: self.objectContext).then { (location:TouristLocation) -> () in
+                        
+                        
+                        DispatchQueue.main.async { () -> () in
+                            vc?.setupDependencies(basedOn:location, from: self.objectContext, photoService: self.photoService)
                         }
                         
-                        // 3.2) // Tourist location now exists, fill it with photos! 
-                        
-                        self.objectCreator.create(basedOn: l, seed: 1) { (p:Photo?, err:Error?) in
-                            
-                            // FIXME: We don't actually do anything if photo creation errors...
-                            
+                        Photo.createBatch(basedOn: location, photoService: self.photoService, seed: 1, context: self.objectContext).always {
                             DispatchQueue.main.async {
                                 vc?.pendingPhotos -= 1
                             }
                         }
-                        
-                        DispatchQueue.main.async {
-                            vc?.setupDependencies(basedOn:l, from: self.objectContext, creator:self.objectCreator)
-                        }
-                        
+                        // FIXME: What to do if photos fail?
                     }
+                    .catch {_ in 
+                        
+                        // We Errored Creating location, dismiss Detail view
+                        if let _ = vc {
+                            print("Error Creating Location Entity")
+                            self.navigationController?.popViewController(animated: true)
+                            self.showErrorAlert(title: "Network Error", message:"Unable to request location info" )
+                        }
+                    }
+                    
+                    
+
                 }
             }
             

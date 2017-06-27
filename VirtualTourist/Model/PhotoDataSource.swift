@@ -33,14 +33,13 @@ class VT_PhotoCollectionDataSource: NSObject {
     
     let controller: NSFetchedResultsController<Photo>
     let objectContext: NSManagedObjectContext
-    let creator: EntityFactory
-    
+    let photoService: PhotoService
     var parentEntity: NSManagedObjectID?
 
-    init(controller: NSFetchedResultsController<Photo>, objectContext:NSManagedObjectContext, creator:EntityFactory){
+    init(controller: NSFetchedResultsController<Photo>, objectContext:NSManagedObjectContext, photoService: PhotoService){
         self.controller = controller
         self.objectContext = objectContext
-        self.creator = creator
+        self.photoService = photoService
         
         try? controller.performFetch() // FIXME: WHAT DO WE DO ABOUT ERRORS? 
         super.init()
@@ -87,16 +86,12 @@ extension VT_PhotoCollectionDataSource: LivePhotoData, LocationPhotoEditor {
         
         let newPhotoSeed = Int(arc4random_uniform(100))
         
-        let prefetch = creator.prefetchPhotos(basedOn: loc, seed: newPhotoSeed)
-        prefetch.then { _ in
+        _ = self.replacePhotos(for: loc, newCollectionSeed: newPhotoSeed ).catch { _ in
             
-            // Just catch errors, controller should auto update on success
-            _ = self.replacePhotos(for: loc, newCollectionSeed: newPhotoSeed ).catch { _ in
-                result.reject(LivePhotoDataErrors.coreDataError)
-            }
-        }
-        .catch { _ in
-            result.reject(LivePhotoDataErrors.networkError)
+            // FIXME: need to differentiate
+            result.reject(LivePhotoDataErrors.coreDataError)
+            //result.reject(LivePhotoDataErrors.networkError)
+
         }
         
         return result.promise
@@ -150,7 +145,7 @@ extension VT_PhotoCollectionDataSource {
 
 extension VT_PhotoCollectionDataSource {
     
-    convenience init(location:TouristLocation, objectContext: NSManagedObjectContext, creator:EntityFactory){
+    convenience init(location:TouristLocation, objectContext: NSManagedObjectContext, photoService: PhotoService){
         
         let fetch: NSFetchRequest<Photo> = Photo.fetchRequest()
         fetch.fetchBatchSize = 10
@@ -164,7 +159,7 @@ extension VT_PhotoCollectionDataSource {
         
         // ONLY SHOW PHOTOs FOR THIS LOCATION
         fetch.predicate = NSPredicate(format: "location == %@", argumentArray: [location])
-        self.init(controller: controller, objectContext:objectContext, creator: creator)
+        self.init(controller: controller, objectContext:objectContext, photoService: photoService)
         
         // Record Location for later
         parentEntity = location.objectID

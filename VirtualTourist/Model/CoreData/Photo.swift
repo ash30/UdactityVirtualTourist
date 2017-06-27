@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreData
-
+import PromiseKit
 
 public class Photo: NSManagedObject {
 
@@ -26,5 +26,19 @@ public class Photo: NSManagedObject {
         }
     }
     
+ 
+    class func createBatch(basedOn location:TouristLocation, photoService: PhotoService, seed: Int, context:NSManagedObjectContext) -> Promise<[Promise<Photo>]>{
+        
+        return photoService.searchPhotos_byLocation(lat:location.latitude, long:location.longitude, seed: seed).then { (response:[Promise<NamedImageData>]) -> [Promise<Photo>] in
+            
+            response.map{ (image: Promise<NamedImageData>) -> Promise<Photo> in
+                image.then { (data:NamedImageData) -> Photo in
+                    Photo(
+                        imageData: data.data, location: location, name: data.name, context:context
+                    )
+                }
+            }
+        }
+    }
     
 }

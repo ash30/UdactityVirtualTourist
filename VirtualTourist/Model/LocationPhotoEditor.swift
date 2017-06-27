@@ -13,7 +13,7 @@ import PromiseKit
 // Object for editing a locations assigned photos
 
 protocol LocationPhotoEditor {
-    var creator: EntityFactory { get }
+    var photoService: PhotoService { get }
     var objectContext: NSManagedObjectContext { get }
     
     func removePhoto(_ photo:Photo) throws
@@ -53,16 +53,19 @@ extension LocationPhotoEditor {
         }
         
         // 3) all went well, now report Photo creation status
-
-        creator.create(basedOn: location, seed: newCollectionSeed) { (p:Photo?, err:Error?) in
-            
-            guard err == nil else {
-                result.reject(err!)
-                return
+        Photo.createBatch(basedOn: location, photoService: photoService, seed: newCollectionSeed, context: objectContext) .then { _ -> () in
+            do {
+                try self.objectContext.save()
+                result.fulfill(true)
             }
-            result.fulfill(true)
+            catch {
+                result.reject(error)
+            }
         }
-        
+        .catch { (err:Error) in
+            // FIXME: Should probably rollback context at this point?
+            result.reject(err)
+        }
         return result.promise
     }
 
